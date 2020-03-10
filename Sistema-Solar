@@ -1,0 +1,231 @@
+#include <windows.h>
+#include <gl/glut.h>
+
+float transz = -10.0f;
+float transx = 0.0f;
+float transy = 0.0f;
+
+float angleX = 0.0f;
+float angleY = 0.0f;
+
+//VARIABLES PARA ANIMACIÓN
+DWORD dwFrames = 0;
+DWORD dwCurrentTime = 0;
+DWORD dwLastUpdateTime = 0;
+DWORD dwElapsedTime = 0;
+
+//VARIABLES ACUMULADORAS PARA ROTACIONES DE CUERPOS CELESTES
+int giraRotaLuisMi = 0.0f;
+int giraRotaMercurio = 0.0f;
+int giraRotaVenus = 0.0f;
+int giraRotaTierra = 0.0f;
+
+//VARIABLES ACUMULADORAS PARA TRANSLACIONES DE CUERPOS CELESTES
+int giraTraslaMercurio = 0.0f;
+int giraTraslaVenus = 0.0f;
+int giraTraslaTierra = 0.0f;
+
+//VARIABLES PARA ACTIVAR/DESACTIVAR LA ANIMACION
+bool reproduceAnima = true;
+
+//COLORES PARA EL SISTEMA
+float sol[3] = { 1.0, 1.0, 0.0 };
+float mercurio[3] = {};
+float venus[3] = { 0.960, 0.317, 0.784 };
+float tierra[3] = {};
+float luna[3] = {};
+float marte[3] = {};
+
+void inicializar(void)
+{
+	//glClearColor(0.831, 0.949, 0.988, 1);
+	glClearColor(0, 0, 0, 1);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+}
+
+
+void dibujar(void)
+{
+	//glClearColor(0, 1, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glTranslatef(transx, transy, transz);
+
+	glRotatef(angleY, 0.0, 1.0, 0.0);
+	glRotatef(angleX, 1.0, 0.0, 0.0);
+
+	//AGREGANDO UNA ESFERA
+	//dibujo - coloreo - roto
+	glPushMatrix();
+	glRotatef(giraRotaLuisMi, 0.0, 1.0, 0.0);
+	glColor3fv(sol);
+	glutWireSphere(1.9, 12, 12);
+	glPopMatrix();
+
+	glPushMatrix();
+	//AQUÍ SE COLOCA LA ROTACIÓN PARA QUE MERCURIO GIRE ALREDEDOR DEL SOL
+		glRotatef(giraTraslaMercurio, 0.0, 1.0, 0.0);
+		//AQUÍ VA MERCURIO
+		glPushMatrix();
+			glTranslatef(3.0, 0.0, 0.0);
+			glRotatef(giraRotaMercurio, 0.0, 1.0, 0.0);
+			glColor3fv(sol);
+			glutWireSphere(0.3, 12, 12);
+		glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();
+		//AQUÍ SE COLOCA LA ROTACIÓN PARA QUE VENUS GIRE ALREDEDOR DEL SOL
+		glRotatef(giraTraslaVenus, 0.0, 1.0, 0.0);
+		//AQUÍ VA EL PLANETA VENUS
+		glPushMatrix();
+			glTranslatef(5.0, 0.0, 0.0);
+			glRotatef(giraRotaVenus, 0.0, 1.0, 0.0);
+			glColor3fv(venus);
+			glutWireSphere(0.5, 12, 12);
+		glPopMatrix();
+	glPopMatrix();
+
+	glFlush();
+	glutSwapBuffers();
+
+}
+
+void anima(void)
+{
+	// Calculate the number of frames per one second:
+	//dwFrames++;
+	dwCurrentTime = GetTickCount(); // Even better to use timeGetTime()
+	dwElapsedTime = dwCurrentTime - dwLastUpdateTime;
+
+	if (reproduceAnima == true)
+	{
+		if (dwElapsedTime >= 30)
+		{
+			giraRotaLuisMi = (giraRotaLuisMi - 1) % 360;
+			giraRotaMercurio = (giraRotaMercurio - 1) % 360;
+			giraTraslaMercurio = (giraTraslaMercurio - 1) % 360;
+			giraRotaVenus = (giraRotaVenus - 1) % 360;
+			giraTraslaVenus = (giraTraslaVenus - 2) % 360;
+
+			dwLastUpdateTime = dwCurrentTime;
+		}
+
+	}
+	
+
+	glutPostRedisplay();
+}
+
+void remodelar(int width, int height)
+{
+	if (height == 0)
+	{
+		height = 1;
+	}
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	//TIPO DE VISTA
+	glFrustum(-0.1, 0.1, -0.1, 0.1, 0.1, 50.0);
+
+	glutPostRedisplay();
+}
+
+void teclado(unsigned char key, int x, int y)
+{
+	switch (key) {
+	case 'w': case 'W':  //acerca al objeto con traslación en z pos
+		transz += 0.2f;
+		break;
+
+	case 's': case 'S':  //aleja al objeto con traslación en z neg
+		transz -= 0.2f;
+		break;
+
+	case 'a': case 'A':  //traslada objeto hacia la derecha en x pos
+		transx += 0.2f;
+		break;
+
+	case 'd': case 'D':  //traslada objeto hacia la izquierda en x neg
+		transx -= 0.2f;
+		break;
+
+	case 'e': case 'E':  //traslada objeto hacia arriba en y pos
+		transy += 0.2f;
+		break;
+
+	case 'c': case 'C':  //traslada objeto hacia abajo en y neg
+		transy -= 0.2f;
+		break;
+
+	case 'p': case 'P':
+		reproduceAnima = !reproduceAnima;
+		break;
+
+
+	case 27:  //Si presiona tecla ESC (ASCII 27) sale
+		exit(0);
+		break;
+
+	default:  //Si es cualquier otra tecla no hace nada
+		break;
+	}
+
+	glutPostRedisplay();
+}
+
+
+void teclasFlechas(int tecla, int x, int y)  // Funcion para manejo de teclas especiales (arrow keys)
+{
+	switch (tecla) {
+	case GLUT_KEY_UP:  //gira sobre x sentido antihorario, valor positivo
+		angleX += 2.0f;
+		break;
+	case GLUT_KEY_DOWN:  //gira sobre x sentido horario, valor negativo
+		angleX -= 2.0f;
+		break;
+	case GLUT_KEY_LEFT:  //gira sobre y sentido antihorario, valor positivo
+		angleY += 2.0f;
+		break;
+	case GLUT_KEY_RIGHT:  //gira sobre y sentido horario, valor negativo
+		angleY -= 2.0f;
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
+}
+
+int main(int argc, char *argv[])
+{
+	glutInit(&argc, argv);
+
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+
+	glutInitWindowSize(500, 500);
+
+	glutCreateWindow(argv[1]);
+
+	inicializar();
+
+	glutDisplayFunc(dibujar);
+
+	glutReshapeFunc(remodelar);
+
+	glutKeyboardFunc(teclado);
+
+	glutSpecialFunc(teclasFlechas);
+
+	glutIdleFunc(anima);
+
+	glutMainLoop();
+
+	return 0;
+}
