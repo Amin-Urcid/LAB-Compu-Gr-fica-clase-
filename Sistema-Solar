@@ -19,22 +19,25 @@ int giraRotaLuisMi = 0.0f;
 int giraRotaMercurio = 0.0f;
 int giraRotaVenus = 0.0f;
 int giraRotaTierra = 0.0f;
+int giraRotaMarte = 0.0f;
 
 //VARIABLES ACUMULADORAS PARA TRANSLACIONES DE CUERPOS CELESTES
 int giraTraslaMercurio = 0.0f;
 int giraTraslaVenus = 0.0f;
 int giraTraslaTierra = 0.0f;
+int giraTraslaLuna = 0.0f;
+int giraTraslaMarte = 0.0f;
 
 //VARIABLES PARA ACTIVAR/DESACTIVAR LA ANIMACION
 bool reproduceAnima = true;
 
 //COLORES PARA EL SISTEMA
 float sol[3] = { 1.0, 1.0, 0.0 };
-float mercurio[3] = {};
+float mercurio[3] = { 0.956, 0.572, 0.121 };
 float venus[3] = { 0.960, 0.317, 0.784 };
-float tierra[3] = {};
-float luna[3] = {};
-float marte[3] = {};
+float tierra[3] = {0.0, 0.0, 1.0};
+float luna[3] = { 0.905, 0.854, 0.854 };
+float marte[3] = { 0.956, 0.168, 0.121 };
 
 void inicializar(void)
 {
@@ -68,28 +71,65 @@ void dibujar(void)
 	glPopMatrix();
 
 	glPushMatrix();
-	//AQUÍ SE COLOCA LA ROTACIÓN PARA QUE MERCURIO GIRE ALREDEDOR DEL SOL
-		glRotatef(giraTraslaMercurio, 0.0, 1.0, 0.0);
-		//AQUÍ VA MERCURIO
-		glPushMatrix();
-			glTranslatef(3.0, 0.0, 0.0);
-			glRotatef(giraRotaMercurio, 0.0, 1.0, 0.0);
-			glColor3fv(sol);
-			glutWireSphere(0.3, 12, 12);
-		glPopMatrix();
+	//AQUÍ SE COLOCA LA TRASLACIÓN PARA QUE MERCURIO GIRE ALREDEDOR DEL SOL
+	glRotatef(giraTraslaMercurio, 0.0, 1.0, 0.0);
+	//AQUÍ VA MERCURIO
+	glPushMatrix();
+	glTranslatef(3.0, 0.0, 0.0);
+	glRotatef(giraRotaMercurio, 0.0, 1.0, 0.0);
+	glColor3fv(mercurio);
+	glutWireSphere(0.3, 12, 12);
+	glPopMatrix();
 	glPopMatrix();
 
 	glPushMatrix();
-		//AQUÍ SE COLOCA LA ROTACIÓN PARA QUE VENUS GIRE ALREDEDOR DEL SOL
-		glRotatef(giraTraslaVenus, 0.0, 1.0, 0.0);
-		//AQUÍ VA EL PLANETA VENUS
-		glPushMatrix();
-			glTranslatef(5.0, 0.0, 0.0);
-			glRotatef(giraRotaVenus, 0.0, 1.0, 0.0);
-			glColor3fv(venus);
-			glutWireSphere(0.5, 12, 12);
-		glPopMatrix();
+	//AQUÍ SE COLOCA LA TRASLACIÓN PARA QUE VENUS GIRE ALREDEDOR DEL SOL
+	glRotatef(giraTraslaVenus, 0.0, 1.0, 0.0);
+	//AQUÍ VA EL PLANETA VENUS
+	glPushMatrix();
+	glTranslatef(5.0, 0.0, 0.0);
+	glRotatef(giraRotaVenus, 0.0, 1.0, 0.0);
+	glColor3fv(venus);
+	glutWireSphere(0.5, 12, 12);
 	glPopMatrix();
+	glPopMatrix();
+
+
+	glPushMatrix();
+	//AQUI SE COLOCA LA TRASLACIÓN DE LA TIERRA PARA QUE GIRE ALREDEDOR DEL SOL
+	glRotatef(giraTraslaTierra, 0.0, 1.0, 0.0);
+	//AQUÍ VA EL PLANETA TIERRA
+	glPushMatrix();
+	glTranslatef(7.5, 0.0, 0.0);
+	glRotatef(giraRotaTierra, 0.0, 1.0, 0.0);
+	glColor3fv(tierra);
+	glutWireSphere(0.8, 12, 12);
+	glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();
+	//AQUÍ SE COLOCA LA TRASLACION DEL PLANETA ROJO
+	glRotatef(giraTraslaMarte, 0.0, 1.0, 0.0);
+	//AQUÍ VA EL PLANETA ROJO
+	glPushMatrix();
+	glTranslatef(11.5, 0.0, 0.0);
+	glRotatef(giraRotaMarte, 0.0, 1.0, 0.0);
+	glColor3fv(marte);
+	glutWireSphere(0.9, 12.0, 12.0);
+	glPopMatrix();
+	glPopMatrix();
+	
+	glPointSize(4.0);
+	glColor3f(0.964, 0.964, 0.854);
+	glBegin(GL_POINTS);
+	glVertex3f(5.0, 4.5, 0.0);
+	glVertex3f(2.3, 9.6, 0.0);
+	glVertex3f(6.8, 9.6, 0.0);
+	glVertex3f(-5.4, 3.5, 0.0);
+	glVertex3f(-7.5, 8.6, 0.0);
+	glEnd();
+	
+	
 
 	glFlush();
 	glutSwapBuffers();
@@ -108,16 +148,25 @@ void anima(void)
 		if (dwElapsedTime >= 30)
 		{
 			giraRotaLuisMi = (giraRotaLuisMi - 1) % 360;
+
 			giraRotaMercurio = (giraRotaMercurio - 1) % 360;
-			giraTraslaMercurio = (giraTraslaMercurio - 1) % 360;
+			giraTraslaMercurio = (giraTraslaMercurio - 5) % 360;
+
 			giraRotaVenus = (giraRotaVenus - 1) % 360;
-			giraTraslaVenus = (giraTraslaVenus - 2) % 360;
+			giraTraslaVenus = (giraTraslaVenus - 4) % 360;
+
+			giraRotaTierra = (giraRotaTierra - 1) % 360;
+			giraTraslaTierra = (giraTraslaTierra - 2) % 360;
+			//giraTraslaLuna = (giraTraslaLuna - 1) % 360;
+
+			giraRotaMarte = (giraRotaMarte - 1) % 360;
+			giraTraslaMarte = (giraTraslaMarte - 1) % 360;
 
 			dwLastUpdateTime = dwCurrentTime;
 		}
 
 	}
-	
+
 
 	glutPostRedisplay();
 }
