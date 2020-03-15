@@ -27,6 +27,8 @@ int giraTraslaVenus = 0.0f;
 int giraTraslaTierra = 0.0f;
 int giraTraslaLuna = 0.0f;
 int giraTraslaMarte = 0.0f;
+int giraTraslaLunaFobos = 0.0f;
+int giraTraslaLunaDeimos = 0.0f;
 
 //VARIABLES PARA ACTIVAR/DESACTIVAR LA ANIMACION
 bool reproduceAnima = true;
@@ -35,7 +37,7 @@ bool reproduceAnima = true;
 float sol[3] = { 1.0, 1.0, 0.0 };
 float mercurio[3] = { 0.956, 0.572, 0.121 };
 float venus[3] = { 0.960, 0.317, 0.784 };
-float tierra[3] = {0.0, 0.0, 1.0};
+float tierra[3] = { 0.0, 0.0, 1.0 };
 float luna[3] = { 0.905, 0.854, 0.854 };
 float marte[3] = { 0.956, 0.168, 0.121 };
 
@@ -70,6 +72,8 @@ void dibujar(void)
 	glutWireSphere(1.9, 12, 12);
 	glPopMatrix();
 
+
+	//PLANETA MERCURIO
 	glPushMatrix();
 	//AQUÍ SE COLOCA LA TRASLACIÓN PARA QUE MERCURIO GIRE ALREDEDOR DEL SOL
 	glRotatef(giraTraslaMercurio, 0.0, 1.0, 0.0);
@@ -82,6 +86,8 @@ void dibujar(void)
 	glPopMatrix();
 	glPopMatrix();
 
+
+	//PLANETA VENUS
 	glPushMatrix();
 	//AQUÍ SE COLOCA LA TRASLACIÓN PARA QUE VENUS GIRE ALREDEDOR DEL SOL
 	glRotatef(giraTraslaVenus, 0.0, 1.0, 0.0);
@@ -95,30 +101,55 @@ void dibujar(void)
 	glPopMatrix();
 
 
+	
+	//PLANETA TIERRA Y SU LUNA
 	glPushMatrix();
 	//AQUI SE COLOCA LA TRASLACIÓN DE LA TIERRA PARA QUE GIRE ALREDEDOR DEL SOL
-	glRotatef(giraTraslaTierra, 0.0, 1.0, 0.0);
+		glRotatef(giraTraslaTierra, 0.0, 1.0, 0.0);
 	//AQUÍ VA EL PLANETA TIERRA
-	glPushMatrix();
-	glTranslatef(7.5, 0.0, 0.0);
-	glRotatef(giraRotaTierra, 0.0, 1.0, 0.0);
-	glColor3fv(tierra);
-	glutWireSphere(0.8, 12, 12);
-	glPopMatrix();
-	glPopMatrix();
-
-	glPushMatrix();
-	//AQUÍ SE COLOCA LA TRASLACION DEL PLANETA ROJO
-	glRotatef(giraTraslaMarte, 0.0, 1.0, 0.0);
-	//AQUÍ VA EL PLANETA ROJO
-	glPushMatrix();
-	glTranslatef(11.5, 0.0, 0.0);
-	glRotatef(giraRotaMarte, 0.0, 1.0, 0.0);
-	glColor3fv(marte);
-	glutWireSphere(0.9, 12.0, 12.0);
-	glPopMatrix();
+		glPushMatrix();//
+		glTranslatef(8.0, 0.0, 0.0);
+		glRotatef(giraRotaTierra, 0.0, 1.0, 0.0);
+		//AQUÍ SE COLOCA LA LUNA
+		glPushMatrix();
+			glRotatef((giraTraslaLuna), 0.0, 1.0, 0.0);
+			glTranslatef(1.2, 0.0, 0.0);
+			glColor3fv(luna);
+			glutWireSphere(0.3, 12, 12);//DIBUJA LA LUNA
+		glPopMatrix();
+		glColor3fv(tierra);
+		glutWireSphere(0.9, 12, 12);//DIBUJA LA TIERRA
+		glPopMatrix();
 	glPopMatrix();
 	
+	
+	//PLANETA MARTE Y SUS LUNAS
+	glPushMatrix();
+	//AQUI SE COLOCA LA TRASLACIÓN DE LA TIERRA PARA QUE GIRE ALREDEDOR DEL SOL
+		glRotatef(giraTraslaMarte, 0.0, 1.0, 0.0);
+		//AQUÍ VA EL PLANETA TIERRA
+		glPushMatrix();//
+			glTranslatef(12.5, 0.0, 0.0);
+			glRotatef(giraRotaMarte, 0.0, 1.0, 0.0);
+			//AQUÍ SE COLOCA LA LUNA FOBOS
+			glPushMatrix();
+				glRotatef((giraTraslaLunaFobos), 0.0, 1.0, 0.0);
+				glTranslatef(1.2, 0.0, 0.0);
+				glColor3fv(luna);
+				glutWireSphere(0.3, 12, 12);//DIBUJA LA LUNA FOBOS
+			glPopMatrix();
+			glPushMatrix();
+				glRotatef((giraTraslaLunaDeimos), 0.0, 0.0, 1.0);
+				glTranslatef(1.3, 0.0, 0.0);
+				glColor3fv(mercurio);
+				glutWireSphere(0.2, 12, 12); //DIBUJA LA LUNA DEIMOS
+			glPopMatrix();
+		glColor3fv(marte);
+		glutWireSphere(0.9, 12, 12);//DIBUJA LA TIERRA
+		glPopMatrix();
+	glPopMatrix();
+	
+
 	glPointSize(4.0);
 	glColor3f(0.964, 0.964, 0.854);
 	glBegin(GL_POINTS);
@@ -127,9 +158,11 @@ void dibujar(void)
 	glVertex3f(6.8, 9.6, 0.0);
 	glVertex3f(-5.4, 3.5, 0.0);
 	glVertex3f(-7.5, 8.6, 0.0);
+	glVertex3f(-4.2, 5.9, 0.0);
+	glVertex3f(9.8, 6.7, 0.0);
 	glEnd();
-	
-	
+
+
 
 	glFlush();
 	glutSwapBuffers();
@@ -157,10 +190,12 @@ void anima(void)
 
 			giraRotaTierra = (giraRotaTierra - 1) % 360;
 			giraTraslaTierra = (giraTraslaTierra - 2) % 360;
-			//giraTraslaLuna = (giraTraslaLuna - 1) % 360;
+			giraTraslaLuna = (giraTraslaLuna - 8) % 360;
 
 			giraRotaMarte = (giraRotaMarte - 1) % 360;
 			giraTraslaMarte = (giraTraslaMarte - 1) % 360;
+			giraTraslaLunaFobos = (giraTraslaLunaFobos - 7) % 360;
+			giraTraslaLunaDeimos = (giraTraslaLunaDeimos - 5) % 360;
 
 			dwLastUpdateTime = dwCurrentTime;
 		}
