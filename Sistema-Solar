@@ -69,7 +69,7 @@ void dibujar(void)
 	glPushMatrix();
 	glRotatef(giraRotaLuisMi, 0.0, 1.0, 0.0);
 	glColor3fv(sol);
-	glutWireSphere(1.9, 12, 12);
+	glutSolidSphere(1.9, 12, 12);
 	glPopMatrix();
 
 
@@ -82,7 +82,7 @@ void dibujar(void)
 	glTranslatef(3.0, 0.0, 0.0);
 	glRotatef(giraRotaMercurio, 0.0, 1.0, 0.0);
 	glColor3fv(mercurio);
-	glutWireSphere(0.3, 12, 12);
+	glutSolidSphere(0.3, 12, 12);
 	glPopMatrix();
 	glPopMatrix();
 
@@ -96,7 +96,7 @@ void dibujar(void)
 	glTranslatef(5.0, 0.0, 0.0);
 	glRotatef(giraRotaVenus, 0.0, 1.0, 0.0);
 	glColor3fv(venus);
-	glutWireSphere(0.5, 12, 12);
+	glutSolidSphere(0.5, 12, 12);
 	glPopMatrix();
 	glPopMatrix();
 
@@ -115,19 +115,19 @@ void dibujar(void)
 			glRotatef((giraTraslaLuna), 0.0, 1.0, 0.0);
 			glTranslatef(1.2, 0.0, 0.0);
 			glColor3fv(luna);
-			glutWireSphere(0.3, 12, 12);//DIBUJA LA LUNA
+			glutSolidSphere(0.3, 12, 12);//DIBUJA LA LUNA
 		glPopMatrix();
 		glColor3fv(tierra);
-		glutWireSphere(0.9, 12, 12);//DIBUJA LA TIERRA
+		glutSolidSphere(0.9, 12, 12);//DIBUJA LA TIERRA
 		glPopMatrix();
 	glPopMatrix();
 	
 	
 	//PLANETA MARTE Y SUS LUNAS
 	glPushMatrix();
-	//AQUI SE COLOCA LA TRASLACIÓN DE LA TIERRA PARA QUE GIRE ALREDEDOR DEL SOL
+	//AQUI SE COLOCA LA TRASLACIÓN DEL PLANETA ROJO PARA QUE GIRE ALREDEDOR DEL SOL
 		glRotatef(giraTraslaMarte, 0.0, 1.0, 0.0);
-		//AQUÍ VA EL PLANETA TIERRA
+		//AQUÍ VA EL PLANETA ROJO
 		glPushMatrix();//
 			glTranslatef(12.5, 0.0, 0.0);
 			glRotatef(giraRotaMarte, 0.0, 1.0, 0.0);
@@ -136,16 +136,16 @@ void dibujar(void)
 				glRotatef((giraTraslaLunaFobos), 0.0, 1.0, 0.0);
 				glTranslatef(1.2, 0.0, 0.0);
 				glColor3fv(luna);
-				glutWireSphere(0.3, 12, 12);//DIBUJA LA LUNA FOBOS
+				glutSolidSphere(0.3, 12, 12);//DIBUJA LA LUNA FOBOS
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef((giraTraslaLunaDeimos), 0.0, 0.0, 1.0);
 				glTranslatef(1.3, 0.0, 0.0);
 				glColor3fv(mercurio);
-				glutWireSphere(0.2, 12, 12); //DIBUJA LA LUNA DEIMOS
+				glutSolidSphere(0.2, 12, 12); //DIBUJA LA LUNA DEIMOS
 			glPopMatrix();
 		glColor3fv(marte);
-		glutWireSphere(0.9, 12, 12);//DIBUJA LA TIERRA
+		glutSolidSphere(0.9, 12, 12);//DIBUJA MARTE
 		glPopMatrix();
 	glPopMatrix();
 	
@@ -160,6 +160,13 @@ void dibujar(void)
 	glVertex3f(-7.5, 8.6, 0.0);
 	glVertex3f(-4.2, 5.9, 0.0);
 	glVertex3f(9.8, 6.7, 0.0);
+	glVertex3f(5.0, -4.5, 0.0);
+	glVertex3f(2.3, -9.6, 0.0);
+	glVertex3f(6.8, -9.6, 0.0);
+	glVertex3f(-5.4, -3.5, 0.0);
+	glVertex3f(-7.5, -8.6, 0.0);
+	glVertex3f(-4.2, -5.9, 0.0);
+	glVertex3f(9.8, -6.7, 0.0);
 	glEnd();
 
 
