@@ -1,0 +1,650 @@
+#include <stdio.h>
+#include <string.h>
+//#include <GL/glut.h>
+
+#include "texture.h"
+#include "figuras.h"
+#include "Camera.h"
+
+//Solo para Visual Studio 2015 o mayor
+#if (_MSC_VER >= 1900)
+#   pragma comment( lib, "legacy_stdio_definitions.lib" )
+#endif
+
+//variables para cámara
+CCamera objCamera;	//Create objet Camera
+GLfloat g_lookupdown = 0.0f;    // Look Position In The Z-Axis (NEW) 
+
+//variables para texto dibujado
+char s[30];
+long int font = (long int)GLUT_BITMAP_HELVETICA_18;
+
+CTexture text1;
+CTexture text2;
+CTexture text3;	//Flecha
+CTexture text4;	//Pavimento
+CTexture text5;	//Pasto01
+CTexture text6;	//Casa01
+CTexture text7; //Pared Ladrillos verdes
+CTexture text8; //TECHO
+CTexture text9; //Pared ladrillos grises
+CTexture textBalon;
+CTexture textBalon2;//BALÓN DE BALONCESTO
+CTexture textBalon3; //BALON DE BALONCESTO 2
+
+CFiguras fig1;
+CFiguras fig2;
+CFiguras fig3;
+CFiguras fig4;	//Pasto01
+CFiguras fig5;	//Casa01
+CFiguras fig6;
+CFiguras balon;
+//CFiguras balonB; //BALÓN DE BALONCESTO
+
+
+//Animacion del balón
+float movBalon= 0.0;
+float giraBalon = 0.0f;
+
+float movBalon2 = 0.0;
+float giraBalon2 = 0.0f;
+
+float movBalon3 = 0.0;
+float giraBalon3 = 0.0;
+
+
+//Banderas de animación para el teclado
+bool banderaAnimacionBalon= false;
+bool avanzaBalon= true;
+
+bool banderaAnimacionBalon2 = false;
+bool avanzaBalon2 = true;
+
+bool banderaAnimacionBalon3 = false;
+bool avanzaBalon3 = true;
+			
+//función para inicializar estados de gl
+void inicializar(void)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				// Negro de fondo	
+
+	glEnable(GL_TEXTURE_2D);
+
+	glShadeModel (GL_SMOOTH);
+
+	glEnable ( GL_COLOR_MATERIAL );
+
+	glClearDepth(1.0f);									// Configuramos Depth Buffer
+	glEnable(GL_DEPTH_TEST);							// Habilitamos Depth Testing
+	glDepthFunc(GL_LEQUAL);								// Tipo de Depth Testing a realizar
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+	glEnable(GL_AUTO_NORMAL);
+	glEnable(GL_NORMALIZE);
+
+    
+    text1.LoadBMP("skybox/01.bmp");
+	text1.BuildGLTexture();
+	text1.ReleaseImage();
+
+	text3.LoadTGA("ciudad/flecha128.tga");
+	text3.BuildGLTexture();
+	text3.ReleaseImage();
+
+	text4.LoadTGA("ciudad/caminoCarritos512.tga");
+	text4.BuildGLTexture();
+	text4.ReleaseImage();
+
+	text5.LoadTGA("ciudad/pasto256.tga");
+	text5.BuildGLTexture();
+	text5.ReleaseImage();
+
+	text6.LoadTGA("ciudad/casa01256.tga");
+	text6.BuildGLTexture();
+	text6.ReleaseImage();
+
+	text7.LoadBMP("ciudad/pared_512.bmp");
+	text7.BuildGLTexture();
+	text7.ReleaseImage();
+
+	text8.LoadTGA("ciudad/techo.tga");
+	text8.BuildGLTexture();
+	text8.ReleaseImage();
+
+	text9.LoadBMP("ciudad/paredLadrillos.bmp");
+	text9.BuildGLTexture();
+	text9.ReleaseImage();
+
+	//AGREGAR LA TEXTURA DE BALONES EN LA CARPETA
+	textBalon.LoadBMP("balones/textura_balon512.bmp");
+	textBalon.BuildGLTexture();
+	textBalon.ReleaseImage();
+
+	//BALON DE BASKET
+	textBalon2.LoadBMP("balones/balon2_512.bmp");
+	textBalon2.BuildGLTexture();
+	textBalon2.ReleaseImage();
+
+	//BALON BASKET 2
+	textBalon3.LoadBMP("balones/balon2_512.bmp");
+	textBalon3.BuildGLTexture();
+	textBalon3.ReleaseImage();
+
+	objCamera.Position_Camera(10,2.5f,13, 10,2.5f,10, 0, 1.0, 0);
+
+}
+
+void pintaTexto(float x, float y, float z, void *font, char *string)
+{
+	char *c;     //Almacena los caracteres a escribir
+	glRasterPos3f(x, y, z);	//Posicion apartir del centro de la ventana
+	//glWindowPos2i(150,100);
+	for (c = string; *c != '\0'; c++) //Condicion de fin de cadena
+	{
+		glutBitmapCharacter(font, *c); //imprime
+	}
+}
+
+void dibujaCiudad(void)
+{
+	
+			glPushMatrix(); //Flecha
+				glScalef(7,0.1,7);
+				//glDisable(GL_LIGHTING);
+				fig3.prisma_anun(text3.GLindex, 0);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glPushMatrix(); //Camino1
+				glTranslatef(23.5,0.0,0.0);
+				glScalef(40,0.1,7);
+				//glDisable(GL_LIGHTING);
+				fig3.prisma2(text4.GLindex, 0);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glPushMatrix(); //Camino2
+				glTranslatef(-23.5,0.0,0.0);
+				glScalef(40,0.1,7);
+				//glDisable(GL_LIGHTING);
+				fig3.prisma2(text4.GLindex, 0);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glPushMatrix(); //Pasto
+				glTranslatef(0.0,0.0,-4.0);
+				glScalef(87,0.1,1);
+				//glDisable(GL_LIGHTING);
+				fig4.prisma2(text5.GLindex, 0);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glPushMatrix(); //Pasto
+				glTranslatef(0.0,0.0,4.0);
+				glScalef(87,0.1,1);
+				//glDisable(GL_LIGHTING);
+				fig4.prisma2(text5.GLindex, 0);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glPushMatrix(); //Casa01  CASA IZQUIERDA
+				glTranslatef(0.0,3.0,7.0);
+				glRotatef(90,1,0,0);
+				glRotatef(180,0,0,1);
+				glScalef(6,5.0,6);
+				//glDisable(GL_LIGHTING);
+				fig5.prisma3(text6.GLindex, text7.GLindex, text8.GLindex);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glPushMatrix(); //Casa02  CASA DERECHA
+				glTranslatef(0.0,3.0,-7.0);
+				glRotatef(90,1,0,0);
+				glScalef(6,5.0,6);
+				//glDisable(GL_LIGHTING);
+				fig5.prisma3(text6.GLindex, text9.GLindex, text8.GLindex);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+			glColor3f(1.0,1.0,1.0);
+}
+
+
+void dibujar(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Limpiamos pantalla y Depth Buffer
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	glPushMatrix();
+
+		glRotatef(g_lookupdown,1.0f,0,0);
+
+		gluLookAt(	objCamera.mPos.x,  objCamera.mPos.y,  objCamera.mPos.z,	
+					objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,	
+					objCamera.mUp.x,   objCamera.mUp.y,   objCamera.mUp.z);
+	
+
+		glPushMatrix();		
+			glPushMatrix(); //Creamos cielo
+				//glDisable(GL_LIGHTING);
+				glTranslatef(0,60,0);
+				fig1.skybox(130.0, 130.0, 130.0,text1.GLindex);
+				//glEnable(GL_LIGHTING);
+			glPopMatrix();
+
+
+			//Para que el comando glColor funcione con iluminacion
+			glEnable(GL_COLOR_MATERIAL);
+			
+			
+			//llamada a función para dibujado de ciudad - pasto, camino, flecha
+			dibujaCiudad();
+			
+	
+			//dibuja balón - rota - traslada
+			glPushMatrix();
+				glTranslatef(0.6, 0.6, movBalon);
+				glRotatef(giraBalon, 0.0, 0.0, 1.0);
+				//glColor3f(0.0, 0.0, 1.0);
+				glColor3f(1.0, 1.0, 1.0);
+				balon.esfera(0.6, 10, 10, textBalon.GLindex);
+			glPopMatrix();
+
+			//Dibuja Balón-Baloncesto
+			glPushMatrix();
+				glTranslatef(-2.0, 0.6 + movBalon2, 0.0);
+				glRotatef(giraBalon2, giraBalon2, 0.0, 1.0);
+				//glColor3f(1.0, 0.0, 0.0);
+				glColor3f(1.0, 1.0, 1.0);
+				balon.esfera(0.6, 10, 10, textBalon2.GLindex);
+			glPopMatrix();
+
+			//Dibuja segundo balón de baloncesto
+			glPushMatrix();
+				glTranslatef(3.0, 0.6 + movBalon3, 0.0);
+				glRotatef(giraBalon3, giraBalon3, 0.0, 1.0);
+				//glColor3f(0.0, 1.0, 0.0;
+				glColor3f(1.0, 1.0, 1.0);
+				balon.esfera(0.6, 10, 10, textBalon3.GLindex);
+			glPopMatrix();
+			
+
+		glPopMatrix();
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_LIGHTING);
+		glColor3f(1.0,0.0,0.0);
+		pintaTexto(-12,12.0,-14.0,(void *)font,"Practica 10");
+		pintaTexto(-12,10.5,-14,(void *)font,"Animacion");
+		glColor3f(1.0,1.0,1.0);
+	//glEnable(GL_LIGHTING);
+	glEnable(GL_TEXTURE_2D);
+
+	glFlush();
+	glutSwapBuffers ( );
+
+}
+
+void animacion()
+{
+	//***********************
+	//anima letrero
+	fig3.text_izq-= 0.001;
+	fig3.text_der-= 0.001;
+	if(fig3.text_izq<-1)
+		fig3.text_izq=0;
+	if(fig3.text_der<0)
+		fig3.text_der=1;
+	//***********************
+
+
+	//***********************
+	//anima balon
+	/*
+	traslada sobre x desde inicio sin tope
+	movBalon += 0.1;
+	*/
+	
+	/*
+	gira esfera desde inicio sin tope
+	giraBalon += 1.0;
+	*/
+	
+	//usando bandera para iniciar o detener animación
+	/*
+	if(banderaAnimacionBalon==true)  //si es verdadero
+		movBalon += 0.1;
+	*/
+	
+	
+	//usando bandera para iniciar o detener animación con giro
+	/*
+	if(banderaAnimacionBalon==true)  //si es verdadero
+	{
+		movBalon += 0.1;
+		giraBalon += 1.0;
+	}
+	*/
+	
+	//usando bandera para iniciar o detener animación y límite de distancia
+	/*
+	if(banderaAnimacionBalon==true) //si es verdadero
+	{
+		if(avanzaBalon==true) //si es verdadero
+		{
+			movBalon += 0.1;
+			giraBalon += 1.5f;
+			if(movBalon > 4.0)
+				avanzaBalon= false;
+		}
+		else
+		{
+			movBalon -= 0.01;
+			giraBalon -= 1.5f;
+			if (movBalon <= -4.0);
+			{
+				avanzaBalon = true;
+			}
+		}
+	}
+
+	if (banderaAnimacionBalon2 == true)
+	{
+		if (avanzaBalon2 == true)
+		{
+			movBalon2 += 0.01;
+			giraBalon2 += 1.5;
+			if (movBalon2 > 4.0)
+			{
+				avanzaBalon2 = false;
+			}
+			else
+			{
+				movBalon2 -= 0.01;
+				giraBalon2 -= 1.5f;
+				if (movBalon2 <= 0.0)
+				{
+					avanzaBalon2 = true;
+				}
+			}
+		}
+	}
+	*/
+	
+	/*
+	//usando bandera para iniciar o detener animación, límite de distancia y regresa al origen
+	if(banderaAnimacionBalon==true) //si es verdadero
+	{
+		if(avanzaBalon==true) //si es verdadero
+		{
+			movBalon += 0.1;
+			if(movBalon>20.0)
+				avanzaBalon= false;
+		}
+		else
+		{
+			movBalon= 0.0; //pone en la posición 0 en x
+			avanzaBalon= true;
+		}	
+	}
+	*/
+
+	
+	/*
+	//usando bandera para iniciar o detener animación, límite de distancia y regresa al origen en reversa
+	if(banderaAnimacionBalon==true)
+	{
+		if (avanzaBalon==true)
+		{
+			movBalon += 0.1;
+			giraBalon -= 1.0f;
+			if (movBalon > 20.0)
+				avanzaBalon = false;
+		}
+		else
+		{
+			movBalon -= 0.1;
+			giraBalon += 1.0f;
+			if (movBalon <= 0.0)
+			{
+				avanzaBalon=true;
+				banderaAnimacionBalon=false;
+			}
+		}
+			
+	}
+	*/
+	
+	
+	//usando bandera para iniciar o detener animación, límite de distancia, regresa al origen en reversa y vuleve hacia adelante 
+	if(banderaAnimacionBalon==true)
+	{
+		if (avanzaBalon==true)
+		{
+			movBalon += 0.01;
+			giraBalon += 1.5f;
+			if (movBalon > 4.0)
+				avanzaBalon = false;
+		}
+		else
+		{
+			movBalon -= 0.01;
+			giraBalon -= 1.5f;
+			if (movBalon <= -4.0)
+			{
+				avanzaBalon=true;
+				//banderaAnimacionBalon=false;
+			}
+		}
+			
+	}
+
+	if (banderaAnimacionBalon2 == true)
+	{
+		if (avanzaBalon2 == true)
+		{
+			movBalon2 += 0.01;
+			giraBalon2 += 1.5f;
+			if (movBalon2 > 6.0)
+			{
+				avanzaBalon2 = false;
+			}
+		}
+		else
+		{
+			movBalon2 -= 0.01;
+			giraBalon2 -= 1.5f;
+			if (movBalon2 <= 0.0)
+			{
+				avanzaBalon2 = true;
+			}
+		}
+	}
+
+	if (banderaAnimacionBalon3 == true)
+	{
+		if (avanzaBalon3 == true)
+		{
+			movBalon3 += 0.01;
+			giraBalon3 += 1.5f;
+			if (movBalon3 > 6.0)
+			{
+				avanzaBalon3 = false;
+			}
+		}
+		else
+		{
+			movBalon3 -= 0.01;
+			giraBalon3 -= 1.5f;
+			if (movBalon3 <= 0.0)
+			{
+				avanzaBalon3 = true;
+			}
+		}
+	}
+	
+
+	glutPostRedisplay();
+}
+
+void remodelar ( int width , int height )   // Creamos funcion Reshape
+{
+  if (height==0)										// Prevenir division entre cero
+	{
+		height=1;
+	}
+
+	glViewport(0,0,width,height);	
+
+	glMatrixMode(GL_PROJECTION);						// Seleccionamos Projection Matrix
+	glLoadIdentity();
+
+	// Tipo de Vista
+	
+	glFrustum (-0.1, 0.1,-0.1, 0.1, 0.1, 170.0);
+
+	glutPostRedisplay();
+
+}
+
+void teclado(unsigned char key, int x, int y)
+{
+	switch ( key ) {
+		case 'w':   //Movimientos de camara
+		case 'W':
+			objCamera.Move_Camera( CAMERASPEED+0.2 );
+			break;
+
+		case 's':
+		case 'S':
+			objCamera.Move_Camera(-(CAMERASPEED+0.2));
+			break;
+
+		case 'a':
+		case 'A':
+			objCamera.Strafe_Camera(-(CAMERASPEED+0.4));
+			break;
+
+		case 'd':
+		case 'D':
+			objCamera.Strafe_Camera( CAMERASPEED+0.4 );
+			break;
+
+		case 'e':
+		case 'E':
+			objCamera.UpDown_Camera(CAMERASPEED + 0.2); //Traslada el objeto hacia arriba en y
+			break;
+
+		case 'c':
+		case 'C':
+			objCamera.UpDown_Camera(-(CAMERASPEED + 0.2)); //Traslada el objeto hacia abajo en y
+			break;
+
+		case 'b': 		//activa o desactiva animación
+		case 'B':
+			//niega el estado de la bandera
+			banderaAnimacionBalon= !banderaAnimacionBalon; 
+			break;
+
+		case 'p':		//activa o desactiva la animación
+		case 'P':
+			banderaAnimacionBalon2 = !banderaAnimacionBalon2;
+			break;
+
+		case 'z':		//activa o desactiva la animación
+		case 'Z':
+			banderaAnimacionBalon3 = !banderaAnimacionBalon3;
+			break;
+
+
+		case 27:        // Cuando Esc es presionado...
+			exit ( 0 );   // Salimos del programa
+			break;        
+		default:        // Cualquier otra
+			break;
+  }
+
+  glutPostRedisplay();
+}
+
+void teclasFlechas ( int tecla, int x, int y )  // Funcion para manejo de teclas especiales (arrow keys)
+{
+  switch ( tecla ) {
+	case GLUT_KEY_PAGE_UP:
+		objCamera.UpDown_Camera(CAMERASPEED);
+		break;
+
+	case GLUT_KEY_PAGE_DOWN:
+		objCamera.UpDown_Camera(-CAMERASPEED);
+		break;
+
+    case GLUT_KEY_UP:     // Presionamos tecla ARRIBA...
+		g_lookupdown -= 1.0f;
+		break;
+
+    case GLUT_KEY_DOWN:               // Presionamos tecla ABAJO...
+		g_lookupdown += 1.0f;
+		break;
+
+	case GLUT_KEY_LEFT:
+		objCamera.Rotate_View(-CAMERASPEED);
+		break;
+
+	case GLUT_KEY_RIGHT:
+		objCamera.Rotate_View( CAMERASPEED);
+		break;
+
+    default:
+		break;
+  }
+  glutPostRedisplay();
+}
+
+
+int main ( int argc, char** argv )   // Main Function
+{
+	//inicializa GLUT con el sistema de ventanas pasando los argumentos del main
+	glutInit(&argc, argv);
+	
+	//Buffer simple para dibujar
+	//Colores RGB y alpha
+	//Buffer de profundidad
+	glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+	
+	//Define ventana de 600 pixeles de ancho por 600 de alto
+	glutInitWindowSize(600, 600);
+	
+	//Posiciona la ventana de izquierda a derecha 400 pixeles y de arriba a abajo 100
+	glutInitWindowPosition(400, 100);
+	
+	//Crea y abre la ventana y recibe el nombre que va en su barra de título
+	glutCreateWindow("Practica 10");
+	
+	//glutFullScreen     ( );         // Full Screen
+	
+	//Llamada a función propia para inicializar estados de opengl
+	inicializar();
+	
+	//Llamada a la función a ser dibujada y redibujada
+	glutDisplayFunc(dibujar);
+	
+	//Lamada a función para remodelar
+	glutReshapeFunc(remodelar);
+	
+	//Lamada a función que maneja eventos del teclado
+	glutKeyboardFunc(teclado);
+	
+	//Llamada a función para teclas especiales
+	glutSpecialFunc(teclasFlechas);
+
+	glutIdleFunc(animacion);
+	
+	//Llamada a función que cede el control a GLUT y procesa eventos de ventana, ratón
+	glutMainLoop();
+	
+	//termina la ejecución devolviendo cero
+	return 0;
+}
