@@ -334,10 +334,12 @@ void monito(void)
 		glColor3f(1.0,1.0,1.0);
 
 		glPushMatrix();//Cuello
+		glColor3f(1, 0.886, 0.643);
 			glTranslatef(0, 1.0, 0.0);
 			jugador.cilindro(0.25, 0.25, 15, 0);
 			glPushMatrix();//Cabeza
 				glTranslatef(0, 1.0, 0);
+				glColor3f(1, 0.886, 0.643);
 				jugador.esfera(0.75, 15, 15, 0);
 			glPopMatrix();
 		glPopMatrix();
@@ -351,7 +353,7 @@ void monito(void)
 				glRotatef(-45, 0, 1, 0); 
 				glTranslatef(0.75, 0, 0);
 				glPushMatrix();
-				glColor3f(1.0, 0.0, 0.0);//AQUÍ SE CAMBIA EL COLOR
+				glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
 				jugador.prisma(0.7, 1.5, 0.7, 0);
 				glPopMatrix();
 			glPopMatrix();
@@ -368,7 +370,7 @@ void monito(void)
 				//glRotatef(25, 1, 0, 0); 
 				glPushMatrix();
 				glTranslatef(-0.75, 0, 0);
-				glColor3f(0.0, 1.0, 0.0);//AQUI SE CAMBIA EL COLOR
+				glColor3f(1, 0.886, 0.643);//AQUI SE CAMBIA EL COLOR
 				jugador.prisma(0.7, 1.5, 0.7, 0);
 				glPopMatrix();
 			glPopMatrix();
@@ -376,14 +378,14 @@ void monito(void)
 
 		glPushMatrix();//Cintura
 			glTranslatef(0, -1.5, 0);
-			glColor3f(0, 0, 1);
+			glColor3f(0, 0, 0);//AQUÍ SE CAMBIA EL COLOR DEL SHORT
 			jugador.prisma(1, 2, 1, 0);
 
 			glPushMatrix(); //Pierna Derecha -->
 				glTranslatef(0.75, -0.5, 0);
 				glRotatef(-15, 1, 0, 0);
 				glTranslatef(0, -0.5, 0);
-				glColor3f(0, 0, 1);
+				glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMVIEA EL COLOR DE LA PIERNA
 				jugador.prisma(1.0, 0.5, 1, 0);
 				glColor3f(1.0,1.0,1.0);
 
@@ -405,7 +407,7 @@ void monito(void)
 				glTranslatef(-0.75, -0.5, 0);
 				glRotatef(-5, 1, 0, 0);
 				glTranslatef(0, -0.5, 0);
-				glColor3f(0, 0, 1);
+				glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR DE LAS PIERNAS
 				jugador.prisma(1.0, 0.5, 1, 0);
 				glColor3f(1.0,1.0,1.0);
 
@@ -413,10 +415,12 @@ void monito(void)
 					glTranslatef(0, -0.5, 0);
 					glRotatef(15+rotRodIzq, 1, 0, 0);
 					glTranslatef(0, -0.75, 0);
+					glColor3f(0, 0, 0);//COLOR DE LAS CALCETAS Y TACOS
 					jugador.prisma(1.5, 0.5, 1, 0);
 
 					glPushMatrix();
 						glTranslatef(0, -0.75, 0.3);
+						glColor3f(0, 0, 0);//COLOR DE LAS CALCETAS Y TACOS
 						jugador.prisma(0.2, 1.2, 1.5, 0);
 					glPopMatrix();
 				glPopMatrix();
@@ -502,6 +506,7 @@ void dibujar(void)
 		glColor3f(1.0,0.0,0.0);
 		pintaTexto(-12,12.0,-14.0,(void *)font,"Practica 11");
 		pintaTexto(-12,10.5,-14,(void *)font,"Animacion - Keyframes");
+		pintaTexto(-12, 9.0, -14.0, (void *)font, "Urcid Garcia Amin");
 		glColor3f(1.0,1.0,1.0);
 	//glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);
@@ -603,6 +608,16 @@ void teclado(unsigned char key, int x, int y)
 		case 'd':
 		case 'D':
 			objCamera.Strafe_Camera( CAMERASPEED+0.4 );
+			break;
+
+		case 'e':
+		case 'E':
+			objCamera.UpDown_Camera(CAMERASPEED + 0.2); //Traslada el objeto hacia arriba en y
+			break;
+
+		case 'c':
+		case 'C':
+			objCamera.UpDown_Camera(-(CAMERASPEED + 0.2)); //Traslada el objeto hacia abajo en y
 			break;
 
 		case 'k':		//
