@@ -21,7 +21,7 @@ float posXBal=0, posYBal=0.3, posZBal=0;
 
 
 
-#define MAX_FRAMES 15
+#define MAX_FRAMES 40
 int i_max_steps = 90;
 int i_curr_steps = 0;
 
@@ -70,6 +70,7 @@ CTexture text3;	//Flecha
 CTexture text4;	//Pavimento
 CTexture text5;	//Pasto01
 CTexture text6;	//Casa01
+CTexture text7; //Tribuna
 CTexture campoText;	//textura para campo de futbol
 CTexture balonText; //textura para balon de futbol
 
@@ -102,7 +103,17 @@ void ciudad (void)
 			//glRotatef(180,0,0,1);
 			glScalef(54,5.0,6);
 			//glDisable(GL_LIGHTING);
-			fig5.prisma2(text6.GLindex, 0);
+			fig5.prisma2(text7.GLindex, text6.GLindex);
+			//glEnable(GL_LIGHTING);
+		glPopMatrix();
+
+		glPushMatrix();//Grada trasera
+			glTranslatef(0.0, 3.0, 21.0);
+			glRotatef(90, 1, 0, 0);
+			glRotatef(180,0,0,1);
+			glScalef(54, 5.0, 6);
+			//glDisable(GL_LIGHTING);
+			fig5.prisma2(text7.GLindex, text6.GLindex);
 			//glEnable(GL_LIGHTING);
 		glPopMatrix();
 		
@@ -211,6 +222,10 @@ void inicializar(void)
 	text6.LoadTGA("ciudad/casa01256.tga");
 	text6.BuildGLTexture();
 	text6.ReleaseImage();
+
+	text7.LoadBMP("skybox/tribuna_v2.bmp");
+	text7.BuildGLTexture();
+	text7.ReleaseImage();
 	
 	//cargar aquí textura del campo
     campoText.LoadTGA("camposFutbol/campo.tga");
@@ -415,13 +430,15 @@ void monito(void)
 					glTranslatef(0, -0.5, 0);
 					glRotatef(15+rotRodIzq, 1, 0, 0);
 					glTranslatef(0, -0.75, 0);
-					glColor3f(0, 0, 0);//COLOR DE LAS CALCETAS Y TACOS
+					//glColor3f(0, 0, 0);//COLOR DE LAS CALCETAS Y TACOS
 					jugador.prisma(1.5, 0.5, 1, 0);
 
 					glPushMatrix();
 						glTranslatef(0, -0.75, 0.3);
-						glColor3f(0, 0, 0);//COLOR DE LAS CALCETAS Y TACOS
+						glPushMatrix();
+						//glColor3f(0, 0, 0);//COLOR DE LAS CALCETAS Y TACOS
 						jugador.prisma(0.2, 1.2, 1.5, 0);
+						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
@@ -695,6 +712,16 @@ void teclado(unsigned char key, int x, int y)
 		case 'f':
 			posXBal++;
 			printf("%f \n", posXBal);
+			break;
+
+		case 'z':
+			posYBal++;
+			printf("%f \n", posYBal);
+			break;
+
+		case 'Z':
+			posYBal--;
+			printf("%f \n", posYBal);
 			break;
 
 
