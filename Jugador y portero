@@ -40,6 +40,11 @@ static GLuint ciudad_display_list;	//Display List for the Monito
 //Variables de dibujo y manipulacion
 float posX =0, posY = 2.5, posZ =-3.5, rotRodIzq = 0;
 float giroMonito = 0;
+//PORTERO
+float posXp = 20, posYp = 2.5, posZp = 0;
+//float giraportero = 0;
+float movZportero = 0.0f;
+bool porteroPos = true;
 
 //variables de dibujo y manipulación de balón
 float posXBal=0, posYBal=0.5, posZBal=0;
@@ -71,9 +76,14 @@ typedef struct _frame
 	float rotInc;
 	float giroMonito;
 	float giroMonitoInc;
-	//float posXp;  //Posición para el portero en x
-	//float posYp;	//Posición para el portero en y
-	//float posZp; //Posición para el portero en z
+	float posXp;  //Posición para el portero en x
+	float posYp;	//Posición para el portero en y
+	float posZp; //Posición para el portero en z
+	//float giraportero;
+	//float giraporteroInc;
+	float IncXp;
+	float IncYp;
+	float IncZp;
 	
 	//Variables para frames de balón
 	float posXBal;		//Variable para PosicionX de balón
@@ -128,6 +138,7 @@ CTexture text4;	//Pavimento
 CTexture text5;	//Pasto01
 CTexture text6;	//Casa01
 CTexture text7; //Tribuna
+CTexture text8; //Escudo de playera de portero
 CTexture campoText;	//textura para campo de futbol
 CTexture balonText; //textura para balon de futbol
 
@@ -140,7 +151,7 @@ CFiguras fig5;	//Casa01
 CFiguras fig6;
 CFiguras jugador;	//Para crear Monito
 CFiguras figBalon;		//Para crear balon
-//CFiguras jugador2;  //Para crear al portero
+CFiguras jugador2;  //Para crear al portero
 
 
 
@@ -293,7 +304,11 @@ void inicializar(void)
 	text7.LoadBMP("skybox/tribuna_v2.bmp");
 	text7.BuildGLTexture();
 	text7.ReleaseImage();
-	
+
+	text8.LoadTGA("escudos/Manchester-united.tga");
+	text8.BuildGLTexture();
+	text8.ReleaseImage();
+		
     campoText.LoadTGA("camposFutbol/campo.tga");
 	campoText.BuildGLTexture();
 	campoText.ReleaseImage();
@@ -339,9 +354,15 @@ void inicializar(void)
 		KeyFrame[i].rotInc =0;
 		KeyFrame[i].giroMonito =0;
 		KeyFrame[i].giroMonitoInc =0;
-		//KeyFrame[i].posXp = 15;
-		//KeyFrame[i].posYp = 0;
-		//KeyFrame[i].posZp = 0;
+		//Para el portero
+		KeyFrame[i].posXp = 0;
+		KeyFrame[i].posYp = 0;
+		KeyFrame[i].posZp = 0;
+		KeyFrame[i].IncXp = 0;
+		KeyFrame[i].IncYp = 0;
+		KeyFrame[i].IncZp = 0;
+		//KeyFrame[i].giraportero = 0;
+		//KeyFrame[i].giraporteroInc = 0;
 		
 		
 		//información de frame para balón
@@ -364,9 +385,17 @@ void saveFrame ( void )
 	KeyFrame[FrameIndex].posX=posX;
 	KeyFrame[FrameIndex].posY=posY;
 	KeyFrame[FrameIndex].posZ=posZ;
+	KeyFrame[FrameIndex].rotRodIzq = rotRodIzq;
+	KeyFrame[FrameIndex].giroMonito = giroMonito;
 
-	KeyFrame[FrameIndex].rotRodIzq=rotRodIzq;
-	KeyFrame[FrameIndex].giroMonito=giroMonito;
+	//FRAMES DEL PORTERO
+	KeyFrame[FrameIndex].posXp = posXp;
+	KeyFrame[FrameIndex].posYp = posYp;
+	KeyFrame[FrameIndex].posZp = posZp;
+	//KeyFrame[FrameIndex].giraportero = giraportero;
+
+
+	
 	
 	//información de frame para balón
 	KeyFrame[FrameIndex].posXBal=posXBal;
@@ -381,9 +410,16 @@ void resetElements( void )
 	posX=KeyFrame[0].posX;
 	posY=KeyFrame[0].posY;
 	posZ=KeyFrame[0].posZ;
+	rotRodIzq = KeyFrame[0].rotRodIzq;
+	giroMonito = KeyFrame[0].giroMonito;
 
-	rotRodIzq=KeyFrame[0].rotRodIzq;
-	giroMonito=KeyFrame[0].giroMonito;
+	//DEL PORTERO
+	posXp = KeyFrame[0].posXp;
+	posYp = KeyFrame[0].posYp;
+	posZp = KeyFrame[0].posZp;
+	//giraportero = KeyFrame[0].giraportero;
+
+	
 	
 	
 	//información de frame para balón
@@ -395,14 +431,20 @@ void resetElements( void )
 
 void interpolation ( void )
 {
-	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;	
-	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;	
-	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;	
-
+	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
+	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
+	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
+	
 	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;	
 	KeyFrame[playIndex].giroMonitoInc = (KeyFrame[playIndex + 1].giroMonito - KeyFrame[playIndex].giroMonito) / i_max_steps;
 	
-	
+	//información del portero
+	//KeyFrame[playIndex].IncXp = (KeyFrame[playIndex + 1].posXp - KeyFrame[playIndex].posXp) / i_max_steps;
+	//KeyFrame[playIndex].IncYp = (KeyFrame[playIndex + 1].posYp - KeyFrame[playIndex].posYp) / i_max_steps;
+	//KeyFrame[playIndex].IncZp = (KeyFrame[playIndex + 1].posZp - KeyFrame[playIndex].posZp) / i_max_steps;
+	//KeyFrame[playIndex].giraporteroInc = (KeyFrame[playIndex + 1].giraportero - KeyFrame[playIndex].giraportero) / i_max_steps;
+
+
 	//información de frame para balón
 	KeyFrame[playIndex].incXBal = (KeyFrame[playIndex + 1].posXBal - KeyFrame[playIndex].posXBal) / i_max_steps;	
 	KeyFrame[playIndex].incYBal = (KeyFrame[playIndex + 1].posYBal - KeyFrame[playIndex].posYBal) / i_max_steps;	
@@ -515,108 +557,115 @@ void monito(void)
 }
 
 
-/*void portero(void)
+void portero(void)
 {
+	glPushMatrix();
+	glRotatef(-90, 0.0, 1.0, 0.0);
 	//glNewList(1, GL_COMPILE);
-	glPushMatrix();//Pecho
-	glScalef(0.5, 0.5, 0.5);
-	glColor3f(1.0, 1.0, 1.0);
-	jugador.prisma(2.0, 2.0, 1, text2.GLindex);
-	glColor3f(1.0, 1.0, 1.0);
+		glPushMatrix();//Pecho
+			glScalef(0.5, 0.5, 0.5);
+			glColor3f(1.0, 1.0, 1.0);
+			jugador.prisma(2.0, 2.0, 1, text8.GLindex);
+			glColor3f(1.0, 1.0, 1.0);
 
-	glPushMatrix();//Cuello
-	glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
-	glTranslatef(0, 1.0, 0.0);
-	jugador.cilindro(0.25, 0.25, 15, 0);
-	glPushMatrix();//Cabeza
-	glTranslatef(0, 1.0, 0);
-	glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
-	jugador.esfera(0.75, 15, 15, 0);
+		glPushMatrix();//Cuello
+			glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
+			glTranslatef(0, 1.0, 0.0);
+			jugador.cilindro(0.25, 0.25, 15, 0);
+			glPushMatrix();//Cabeza
+			glTranslatef(0, 1.0, 0);
+			glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
+			jugador.esfera(0.75, 15, 15, 0);
+		glPopMatrix();
+		glPopMatrix();
+
+		glPushMatrix(); //Brazo derecho-->
+			glTranslatef(1.25, 0.65, 0);
+			jugador.esfera(0.5, 12, 12, text8.GLindex);//Manga de la playera
+			glPushMatrix();
+			glTranslatef(0.25, 0, 0);
+			glRotatef(-45, 0, 1, 0);
+			glTranslatef(0.75, 0, 0);
+			glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
+			jugador.prisma(0.7, 1.5, 0.7, 0);
+		glPopMatrix();
+		glPopMatrix();
+
+		glPushMatrix(); //Brazo izquierdo <--
+			glTranslatef(-1.25, 0.65, 0);
+			jugador.esfera(0.5, 12, 12, text8.GLindex);//Manga de la playera
+			glPushMatrix();
+			glTranslatef(-0.25, 0, 0);
+			glRotatef(45, 0, 1, 0);
+			glRotatef(25, 0, 0, 1);
+			glRotatef(25, 1, 0, 0);
+			glTranslatef(-0.75, 0, 0);
+			glColor3f(1, 0.886, 0.643);//AQUI SE CAMBIA EL COLOR
+			jugador.prisma(0.7, 1.5, 0.7, 0);
+		glPopMatrix();
+		glPopMatrix();
+
+		glPushMatrix();//Cintura
+			glTranslatef(0, -1.5, 0);
+			glColor3f(0.0, 0.0, 1.0);//AQUÍ SE CAMBIA EL COLOR DEL SHORT
+			jugador.prisma(1, 2, 1, 0);
+
+		glPushMatrix(); //Pierna Derecha -->
+			glTranslatef(0.75, -0.5, 0);
+			glRotatef(-15, 1, 0, 0);
+			glTranslatef(0, -0.5, 0);
+			glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR DE LA PIERNA
+			jugador.prisma(1.0, 0.5, 1, 0);
+		glColor3f(0.0, 0.0, 0.0);
+
+		glPushMatrix();
+			glTranslatef(0, -0.5, 0);
+			glRotatef(15, 1, 0, 0);
+			glTranslatef(0, -0.75, 0);
+			//glColor3f(1.0, 1.0, 1.0);
+			jugador.prisma(1.5, 0.5, 1, 0);
+
+			glPushMatrix();
+				glTranslatef(0, -0.75, 0.3);
+				glColor3f(0.122, 1.0, 0.122); //ZAPATO DERECHO
+				jugador.prisma(0.2, 1.2, 1.5, 0);
+			glPopMatrix();
+		glPopMatrix();
+		glPopMatrix();
+
+
+		glPushMatrix(); //Pierna Izquierda -->
+			glTranslatef(-0.75, -0.5, 0);
+			glRotatef(-5, 1, 0, 0);
+			glTranslatef(0, -0.5, 0);
+			glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR DE LAS PIERNAS
+			jugador.prisma(1.0, 0.5, 1, 0);
+			//glColor3f(1.0, 0.122, 0.122);//PANTORRILLA Y CALCETAS DERECHA
+
+		glPushMatrix();
+			glTranslatef(0, -0.5, 0);
+			glRotatef(15 + rotRodIzq, 1, 0, 0);
+			glTranslatef(0, -0.75, 0);
+			glColor3f(0.0, 0.0, 0.0);//PANTORIILLA Y CALCETAS IZQUIERDA
+		jugador.prisma(1.5, 0.5, 1, 0);
+
+			glPushMatrix();
+				glTranslatef(0, -0.75, 0.3);
+				glColor3f(0.122, 1.0, 0.122);//ZAPATO IZQUIERDO
+				jugador.prisma(0.2, 1.2, 1.5, 0);
+			glPopMatrix();
+		glPopMatrix();
 	glPopMatrix();
+
+
 	glPopMatrix();
-
-	glPushMatrix(); //Brazo derecho-->
-	glTranslatef(1.25, 0.65, 0);
-	jugador.esfera(0.5, 12, 12, text2.GLindex);//Manga de la playera
-	glPushMatrix();
-	glTranslatef(0.25, 0, 0);
-	glRotatef(-45, 0, 1, 0);
-	glTranslatef(0.75, 0, 0);
-	glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
-	jugador.prisma(0.7, 1.5, 0.7, 0);
-	glPopMatrix();
-	glPopMatrix();
-
-	glPushMatrix(); //Brazo izquierdo <--
-	glTranslatef(-1.25, 0.65, 0);
-	jugador.esfera(0.5, 12, 12, text2.GLindex);//Manga de la playera
-	glPushMatrix();
-	glTranslatef(-0.25, 0, 0);
-	glRotatef(45, 0, 1, 0);
-	glRotatef(25, 0, 0, 1);
-	glRotatef(25, 1, 0, 0);
-	glTranslatef(-0.75, 0, 0);
-	glColor3f(1, 0.886, 0.643);//AQUI SE CAMBIA EL COLOR
-	jugador.prisma(0.7, 1.5, 0.7, 0);
-	glPopMatrix();
-	glPopMatrix();
-
-	glPushMatrix();//Cintura
-	glTranslatef(0, -1.5, 0);
-	glColor3f(0, 0, 0);//AQUÍ SE CAMBIA EL COLOR DEL SHORT
-	jugador.prisma(1, 2, 1, 0);
-
-	glPushMatrix(); //Pierna Derecha -->
-	glTranslatef(0.75, -0.5, 0);
-	glRotatef(-15, 1, 0, 0);
-	glTranslatef(0, -0.5, 0);
-	glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR DE LA PIERNA
-	jugador.prisma(1.0, 0.5, 1, 0);
-	glColor3f(1.0, 1.0, 1.0);
-
-	glPushMatrix();
-	glTranslatef(0, -0.5, 0);
-	glRotatef(15, 1, 0, 0);
-	glTranslatef(0, -0.75, 0);
-	jugador.prisma(1.5, 0.5, 1, 0);
-
-	glPushMatrix();
-	glTranslatef(0, -0.75, 0.3);
-	jugador.prisma(0.2, 1.2, 1.5, 0);
-	glPopMatrix();
-	glPopMatrix();
-	glPopMatrix();
-
-
-	glPushMatrix(); //Pierna Izquierda -->
-	glTranslatef(-0.75, -0.5, 0);
-	glRotatef(-5, 1, 0, 0);
-	glTranslatef(0, -0.5, 0);
-	glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR DE LAS PIERNAS
-	jugador.prisma(1.0, 0.5, 1, 0);
-	glColor3f(1.0, 1.0, 1.0);
-
-	glPushMatrix();
-	glTranslatef(0, -0.5, 0);
-	glRotatef(15 + rotRodIzq, 1, 0, 0);
-	glTranslatef(0, -0.75, 0);
-	jugador.prisma(1.5, 0.5, 1, 0);
-
-	glPushMatrix();
-	glTranslatef(0, -0.75, 0.3);
-	jugador.prisma(0.2, 1.2, 1.5, 0);
-	glPopMatrix();
-	glPopMatrix();
-	glPopMatrix();
-
-
 	glPopMatrix();
 
 
 	glColor3f(1.0, 1.0, 1.0);
 	glPopMatrix();
 	//glEndList();
-}*/
+}
 
 
 
@@ -668,18 +717,18 @@ void dibujar(void)
 			glPopMatrix();	
 
 			//Aquí se dibuja al portero
-			/*glPushMatrix();
+			glPushMatrix();
 				glEnable(GL_COLOR_MATERIAL);
 					glColor3f(1, 1, 1);
 					//glScalef(0.5, 0.5, 0.5);
 					//monito();
 					glCallList(ciudad_display_list);
-					glTranslatef(posXp, posYp, posZp);
-					glRotatef(giroMonito, 0, 1, 0);
+					glTranslatef(posXp, posYp, movZportero);
+					//glRotatef(giraportero, 0, 1, 0);
 					portero();
 					//balon();
 				glDisable(GL_COLOR_MATERIAL);
-			glPopMatrix();*/
+			glPopMatrix();
 
 			//aqui dibuja balon
 			glPushMatrix();
@@ -726,11 +775,12 @@ void animacion(void)
 	//angRad = (angGrad*pi)/180
 	
 
-	float	Vinicial = 20.0f,  //Hace que el balón se vaya más lejos
+	float	Vinicial = 17.0f,  //Hace que el balón se vaya más lejos
 			//Vinicial = 10.0f,
 			g = 9.81f,
-			angGrad = 45.0,
-			//angGrad = 70.0,
+			//angGrad = 45.0,
+			angGrad = 60.0,
+				
 			angRad;
 			
 	angRad = (angGrad*pi)/180;
@@ -749,7 +799,23 @@ void animacion(void)
 		t += 0.01;
 	}
 	
-	
+	//MOVIMIENTO DEL PORTERO
+	if (porteroPos)
+	{
+			movZportero += 0.05f;
+		}
+		else if (!porteroPos)
+		{
+			movZportero -= 0.05f;
+		}
+		if (movZportero >= 3.0f)
+		{
+			porteroPos = false;
+		}
+		else if (movZportero <= -3.0f)
+		{
+			porteroPos = true;
+	}
 	//Movimiento del monito
 	if(play)
 	{		
@@ -781,7 +847,7 @@ void animacion(void)
 			rotRodIzq+=KeyFrame[playIndex].rotInc;
 			giroMonito+=KeyFrame[playIndex].giroMonitoInc;
 
-
+			
 			//información de frame para balón
 			posXBal+=KeyFrame[playIndex].incXBal;
 			posYBal+=KeyFrame[playIndex].incYBal;
@@ -789,7 +855,9 @@ void animacion(void)
 
 
 			i_curr_steps++;
+						
 		}
+		
 		
 	}
 
@@ -923,6 +991,36 @@ void teclado(unsigned char key, int x, int y)
 			engine->play2D(audioPikachu);
 			break;
 
+		case 'M':
+			posXp++;
+			printf("%f \n", posXp);
+			break;
+
+		case 'm':
+			posXp--;
+			printf("%f \n", posXp);
+			break;
+
+		case 'n':
+			posYp++;
+			printf("%f \n", posYp);
+			break;
+
+		case 'N':
+			posYp--;
+			printf("%f \n", posYp);
+			break;
+
+		case 'q':
+			posZp++;
+			printf("%f \n", posZp);
+			break;
+
+		case 'Z':
+			posZp--;
+			printf("%f \n", posZp);
+			break;
+
 		
 		//teclas para balón f t g
 		case 'f':
@@ -934,6 +1032,10 @@ void teclado(unsigned char key, int x, int y)
 		case 'z':
 			banderaDispara= !banderaDispara;
 			break;
+
+		
+
+
 			
 
 		case 27:        // Cuando Esc es presionado...
@@ -973,11 +1075,40 @@ void teclasFlechas ( int tecla, int x, int y )  // Funcion para manejo de teclas
 		objCamera.Rotate_View( CAMERASPEED);
 		break;
 
-    default:
+	case GLUT_KEY_F1:
+		//cámara en el centro del campo
+		objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
 		break;
+
+	case GLUT_KEY_F2:
+		//cámara de transmisión
+		objCamera.Position_Camera(0, 10.0f, 20, 0, 2.5f, 0, 0, 1, 0);
+		break;
+
+	case GLUT_KEY_F3:
+		//cámara desde el centro hacia la portería
+		objCamera.Position_Camera(5.0, 2.5f, 0, 20, 2.5f, 0, 0, 1, 0);
+		break;
+
+	case GLUT_KEY_F4:
+		//cámara del tiro de esquina
+		objCamera.Position_Camera(25.0, 2.5f, 20, 20, 2.5f, 0, 0, 1, 0);
+		break;
+
+	case GLUT_KEY_F6:
+		//cámara sobre línea de gol
+		objCamera.Position_Camera(25.0, 15.0f, 0, 25, 0, 0, 1, 0, 0);
+		break;
+
+	default:
+		break;
+
+    
 	}
 	glutPostRedisplay();
 }
+
+
 
 
 void menuKeyFrame( int id)
@@ -1054,6 +1185,8 @@ int main ( int argc, char** argv )   // Main Function
 	glutKeyboardFunc(teclado);
 	
 	glutSpecialFunc(teclasFlechas);
+
+	//glutSpecialFunc(teclasFlechasFunc);
 	
 	glutIdleFunc( animacion );
 	
@@ -1072,5 +1205,3 @@ int main ( int argc, char** argv )   // Main Function
 	//termina la ejecución devolviendo cero
 	return 0;
 }
-
-
