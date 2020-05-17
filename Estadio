@@ -50,6 +50,8 @@ float posXd = 15, posYd = 2.5, posZd = 0.0;
 float movYdefensa = 2.5f;
 bool defensaPos = true;
 bool animadefensa = false;
+//BALÓN
+float posXBal = 0, posYBal = 0.3, posZBal = 0;
 
 
 #define MAX_FRAMES 30
@@ -76,6 +78,14 @@ typedef struct _frame
 	float IncXp;
 	float IncYp;
 	float IncZp;
+
+	//Variables para frames de balón
+	float posXBal;		//Variable para PosicionX de balón
+	float posYBal;		//Variable para PosicionY de balón
+	float posZBal;		//Variable para PosicionZ de balón
+	float incXBal;		//Variable para IncrementoX de balón
+	float incYBal;		//Variable para IncrementoY de balón
+	float incZBal;		//Variable para IncrementoZ de balón
 
 }FRAME;
 
@@ -108,7 +118,7 @@ CTexture textSkyboxAbajo;
 
 //objetos de textura para ciudad
 CTexture textCampo;	//textura para campo de futbol
-CTexture textGradaFrontal;
+CTexture textGrada;
 CTexture textArbol1;
 CTexture textArbol2;
 CTexture textTierra;
@@ -116,6 +126,9 @@ CTexture textNube1;
 CTexture textCaminoPeatonal;
 CTexture textCaminoCarritos;
 CTexture textBasePasto;
+CTexture textBalon; //textura para el balón
+CTexture text1;  //textura para la tribuna
+
 
 
 //objetos de figura
@@ -127,8 +140,7 @@ CFiguras figCaminoPeatonal;
 CFiguras figCaminoCarritos;
 CFiguras figBasePasto;
 CFiguras jugador;  //Para crear Monito #1
-//CFiguras jugador2;  //Para creart al portero
-//CFiguras jugador3; //Para crear al defensa
+CFiguras balon;  //Para crear el balón
 
 
 
@@ -178,9 +190,9 @@ void inicializar(void)     // Inicializamos parametros
 	
 
 	//texturas para ciudad
-	textGradaFrontal.LoadTGA("city/casa01.tga");
-	textGradaFrontal.BuildGLTexture();
-	textGradaFrontal.ReleaseImage();
+	textGrada.LoadTGA("futbol/pared-tribuna_v2.tga");
+	textGrada.BuildGLTexture();
+	textGrada.ReleaseImage();
 
 	textCampo.LoadTGA("campo.tga");
 	textCampo.BuildGLTexture();
@@ -213,6 +225,14 @@ void inicializar(void)     // Inicializamos parametros
 	textBasePasto.LoadTGA("basePasto1.tga");
 	textBasePasto.BuildGLTexture();
 	textBasePasto.ReleaseImage();
+
+	textBalon.LoadBMP("futbol/textura_balon512.bmp");
+	textBalon.BuildGLTexture();
+	textBalon.ReleaseImage();
+
+	text1.LoadBMP("futbol/tribuna.bmp");
+	text1.BuildGLTexture();
+	text1.ReleaseImage();
 	
 
 	objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
@@ -251,6 +271,15 @@ void inicializar(void)     // Inicializamos parametros
 		KeyFrame[i].IncXp = 0;
 		KeyFrame[i].IncYp = 0;
 		KeyFrame[i].IncZp = 0;
+
+
+		//información de frame para balón
+		KeyFrame[i].posXBal = 0;
+		KeyFrame[i].posYBal = 0;
+		KeyFrame[i].posZBal = 0;
+		KeyFrame[i].incXBal = 0;
+		KeyFrame[i].incYBal = 0;
+		KeyFrame[i].incZBal = 0;
 		
 	}
 
@@ -279,9 +308,9 @@ void saveFrame(void)
 
 
 	//información de frame para balón
-	/*KeyFrame[FrameIndex].posXBal = posXBal;
+	KeyFrame[FrameIndex].posXBal = posXBal;
 	KeyFrame[FrameIndex].posYBal = posYBal;
-	KeyFrame[FrameIndex].posZBal = posZBal;*/
+	KeyFrame[FrameIndex].posZBal = posZBal;
 
 	FrameIndex++;
 }
@@ -300,6 +329,11 @@ void resetElements(void)
 	posZp = KeyFrame[0].posZp;
 	//giraportero = KeyFrame[0].giraportero;
 
+	//información de frame para balón
+	posXBal = KeyFrame[0].posXBal;
+	posYBal = KeyFrame[0].posYBal;
+	posZBal = KeyFrame[0].posZBal;
+
 }
 
 void interpolation(void)
@@ -317,7 +351,10 @@ void interpolation(void)
 	//KeyFrame[playIndex].IncZp = (KeyFrame[playIndex + 1].posZp - KeyFrame[playIndex].posZp) / i_max_steps;
 	//KeyFrame[playIndex].giraporteroInc = (KeyFrame[playIndex + 1].giraportero - KeyFrame[playIndex].giraportero) / i_max_steps;
 
-
+	//información de frame para balón
+	KeyFrame[playIndex].incXBal = (KeyFrame[playIndex + 1].posXBal - KeyFrame[playIndex].posXBal) / i_max_steps;
+	KeyFrame[playIndex].incYBal = (KeyFrame[playIndex + 1].posYBal - KeyFrame[playIndex].posYBal) / i_max_steps;
+	KeyFrame[playIndex].incZBal = (KeyFrame[playIndex + 1].posZBal - KeyFrame[playIndex].posZBal) / i_max_steps;
 }
 
 
@@ -325,31 +362,31 @@ void monito(void)
 {
 	//glNewList(1, GL_COMPILE);
 	glPushMatrix();//Pecho
-	glScalef(0.5, 0.5, 0.5);
-	glColor3f(1.0, 1.0, 1.0);
-	jugador.prisma(2.0, 2.0, 1, 0);
-	glColor3f(1.0, 1.0, 1.0);
+		glScalef(0.5, 0.5, 0.5);
+		glColor3f(1.0, 1.0, 1.0);
+		jugador.prisma(2.0, 2.0, 1, 0);
+		glColor3f(1.0, 1.0, 1.0);
 
 	glPushMatrix();//Cuello
-	glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
-	glTranslatef(0, 1.0, 0.0);
-	jugador.cilindro(0.25, 0.25, 15, 0);
-	glPushMatrix();//Cabeza
-	glTranslatef(0, 1.0, 0);
-	glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
-	jugador.esfera(0.75, 15, 15, 0);
+		glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
+		glTranslatef(0, 1.0, 0.0);
+		jugador.cilindro(0.25, 0.25, 15, 0);
+		glPushMatrix();//Cabeza
+		glTranslatef(0, 1.0, 0);
+		glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
+		jugador.esfera(0.75, 15, 15, 0);
 	glPopMatrix();
 	glPopMatrix();
 
 	glPushMatrix(); //Brazo derecho-->
-	glTranslatef(1.25, 0.65, 0);
-	jugador.esfera(0.5, 12, 12, 0);//Manga de la playera
-	glPushMatrix();
-	glTranslatef(0.25, 0, 0);
-	glRotatef(-45, 0, 1, 0);
-	glTranslatef(0.75, 0, 0);
-	glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
-	jugador.prisma(0.7, 1.5, 0.7, 0);
+		glTranslatef(1.25, 0.65, 0);
+		jugador.esfera(0.5, 12, 12, 0);//Manga de la playera
+		glPushMatrix();
+		glTranslatef(0.25, 0, 0);
+		glRotatef(-45, 0, 1, 0);
+		glTranslatef(0.75, 0, 0);
+		glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
+		jugador.prisma(0.7, 1.5, 0.7, 0);
 	glPopMatrix();
 	glPopMatrix();
 
@@ -658,15 +695,15 @@ void ciudad (void)
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 
-		glPushMatrix(); //Grada frontal
+		/*glPushMatrix(); //Grada frontal
 			glTranslatef(0.0,3.0,-21.0);
 			glRotatef(90,1,0,0);
 			//glRotatef(180,0,0,1);
 			glScalef(54,5.0,6);
 			glDisable(GL_LIGHTING);
-			figGradaFrontal.prisma2(textGradaFrontal.GLindex, 0);
+			figGradaFrontal.prisma2(textGrada.GLindex, textTierra.GLindex);
 			glEnable(GL_LIGHTING);
-		glPopMatrix();
+		glPopMatrix();*/
 
 
 		//PORTERIA ORIGINAL
@@ -742,6 +779,15 @@ void ciudad (void)
 			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();	
+
+		glPushMatrix(); //camino peatonal lateral derecho (bosque)
+			glTranslatef(45.0, 0.0, 0.0);
+			glRotatef(90, 0, 1, 0);
+			glScalef(56, 0.1, 4);
+			glDisable(GL_LIGHTING);
+			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
+			glEnable(GL_LIGHTING);
+		glPopMatrix();
 
 
 		//camino peatonal lateral izquierdo
@@ -1039,7 +1085,7 @@ void dibujar(void)   // Creamos la funcion donde se dibuja
 			glPopMatrix();
 
 			glPushMatrix(); //creamos árbolitos con ciclo #2
-				glTranslatef(45.0, 0.0, -24.0);
+				glTranslatef(50.0, 0.0, -24.0);
 
 				for (int coloca = 0; coloca <= 48; coloca += 3)
 				{
@@ -1049,6 +1095,20 @@ void dibujar(void)   // Creamos la funcion donde se dibuja
 					arbol_fondoTransparente(textArbol2);
 					glPopMatrix();
 				}
+			glPopMatrix();
+
+			//creamos árbolitos con ciclo #3
+			glPushMatrix(); 
+			glTranslatef(-30.0, 0.0, -24.0);
+
+			for (int coloca = 0; coloca <= 48; coloca += 3)
+			{
+				glPushMatrix();
+				glTranslatef(0.0, 0.0, (float)coloca);
+				glScalef(0.2, 0.2, 0.2);
+				arbol_fondoTransparente(textArbol2);
+				glPopMatrix();
+			}
 			glPopMatrix();
 			
 	
@@ -1099,6 +1159,13 @@ void dibujar(void)   // Creamos la funcion donde se dibuja
 				defensa();
 				//balon();
 				glDisable(GL_COLOR_MATERIAL);
+			glPopMatrix();
+
+			//aqui dibuja balon
+			glPushMatrix();
+				glTranslatef(posXBal, posYBal, posZBal);
+				glColor3f(1.0, 1.0, 1.0);
+				balon.esfera(0.5, 15, 15, textBalon.GLindex);
 			glPopMatrix();
 	
 		glPopMatrix();
@@ -1196,9 +1263,9 @@ void animacion(void)
 
 
 			//información de frame para balón
-			/*posXBal += KeyFrame[playIndex].incXBal;
+			posXBal += KeyFrame[playIndex].incXBal;
 			posYBal += KeyFrame[playIndex].incYBal;
-			posZBal += KeyFrame[playIndex].incZBal;*/
+			posZBal += KeyFrame[playIndex].incZBal;
 
 
 			i_curr_steps++;
@@ -1231,6 +1298,46 @@ void remodelar(int width, int height)
 	glMatrixMode(GL_MODELVIEW);		// Seleccionamos Modelview Matrix
 	glLoadIdentity();
 }
+
+void menuKeyFrame(int id)
+{
+	switch (id)
+	{
+	case 0:	//Save KeyFrame
+		if (FrameIndex<MAX_FRAMES)
+		{
+			saveFrame();
+		}
+		break;
+
+	case 1:	//Play animation
+		if (play == false && FrameIndex >1)
+		{
+
+			resetElements();
+			//First Interpolation
+			interpolation();
+
+			play = true;
+			playIndex = 0;
+			i_curr_steps = 0;
+		}
+		else
+		{
+			play = false;
+		}
+		break;
+
+
+	}
+}
+
+void menu(int id)
+{
+
+}
+
+
 
 void teclado(unsigned char key, int x, int y)
 {
@@ -1266,6 +1373,57 @@ void teclado(unsigned char key, int x, int y)
 	case 'f':
 		animadefensa = !animadefensa;
 		break;
+
+	case 'y':
+		posYBal++;
+		printf("%f \n", posYBal);
+		break;
+
+	case 'Y':
+		posYBal--;
+		printf("%f \n", posYBal);
+		break;
+
+	case 'g':
+		posXBal++;
+		printf("%f \n", posXBal);
+		break;
+
+	case 'G':
+		posXBal--;
+		printf("%f \n", posXBal);
+		break;
+
+	case 'b':
+		rotRodIzq++;
+		printf("%f \n", rotRodIzq);
+		break;
+
+	case 'B':
+		rotRodIzq--;
+		printf("%f \n", rotRodIzq);
+		break;
+
+	case 'j':
+		posX++;
+		printf("%f \n", posX);
+		break;
+
+	case 'J':
+		posX--;
+		printf("%f \n", posX);
+		break;
+
+	case 'z':
+		posZ++;
+		printf("%f \n", posZ);
+		break;
+
+	case 'Z':
+		posZ--;
+		printf("%f \n", posZ);
+		break;
+
 
 	case 27:  //Si presiona tecla ESC (ASCII 27) sale
 		exit(0);
@@ -1339,6 +1497,8 @@ void teclasFlechasFunc(int a_keys, int x, int y)
 
 int main(int argc, char** argv)   // Main Function
 {
+	int submenu;
+
 	//inicializa GLUT con el sistema de ventanas pasando los argumentos del main
 	glutInit(&argc, argv);
 
@@ -1348,7 +1508,7 @@ int main(int argc, char** argv)   // Main Function
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 
 	//Define ventana de 500 pixeles de ancho por 500 de alto
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(700, 700);
 
 	//Posiciona la ventana de izquierda a derecha 400 pixeles y de arriba a abajo 100
 	glutInitWindowPosition(400, 100);
@@ -1374,13 +1534,13 @@ int main(int argc, char** argv)   // Main Function
 	glutIdleFunc(animacion);
 
 	//bloque para menú gráfico
-	/*submenu = glutCreateMenu(menuKeyFrame);
+	submenu = glutCreateMenu(menuKeyFrame);
 	glutAddMenuEntry("Guardar KeyFrame", 0);
 	glutAddMenuEntry("Reproducir Animacion", 1);
 	glutCreateMenu(menu);
 	glutAddSubMenu("Animacion Monito y balon", submenu);
 
-	glutAttachMenu(GLUT_RIGHT_BUTTON);*/
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	//Llamada a función que cede el control a GLUT y procesa eventos de ventana, ratón
 	glutMainLoop();
