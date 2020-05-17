@@ -37,8 +37,8 @@ irrklang::ISoundSource* audioPikachu = engine->addSoundSourceFromFile("audios/02
 static GLuint ciudad_display_list;	//Display List for the Monito
 
 
-//NEW// Keyframes
-//Variables de dibujo y manipulacion
+									//NEW// Keyframes
+									//Variables de dibujo y manipulacion
 float posX = 0, posY = 2.5, posZ = -3.5, rotRodIzq = 0;
 float giroMonito = 0;
 //PORTERO
@@ -102,7 +102,7 @@ CCamera objCamera;	//Create objet Camera
 GLfloat g_lookupdown = 0.0f;    // Look Position In The Z-Axis (NEW) 
 
 
-//variables para texto dibujado
+								//variables para texto dibujado
 char s[30];
 long int font = (long int)GLUT_BITMAP_HELVETICA_18;
 
@@ -131,7 +131,7 @@ CTexture text1;  //textura para la tribuna
 
 
 
-//objetos de figura
+				 //objetos de figura
 CFiguras figSkybox;
 CFiguras figCampo;
 CFiguras figGradaFrontal;
@@ -164,7 +164,7 @@ void inicializar(void)     // Inicializamos parametros
 	glEnable(GL_NORMALIZE);
 
 
-	
+
 	//http://www.custommapmakers.org/skyboxes.php
 	//con imágenes hechas para skybox para cada lado y arriba
 
@@ -187,7 +187,7 @@ void inicializar(void)     // Inicializamos parametros
 	textSkyboxArriba.LoadTGA("ely_hills/hills_up.tga");
 	textSkyboxArriba.BuildGLTexture();
 	textSkyboxArriba.ReleaseImage();
-	
+
 
 	//texturas para ciudad
 	textGrada.LoadTGA("futbol/pared-tribuna_v2.tga");
@@ -197,11 +197,11 @@ void inicializar(void)     // Inicializamos parametros
 	textCampo.LoadTGA("campo.tga");
 	textCampo.BuildGLTexture();
 	textCampo.ReleaseImage();
-	
+
 	textArbol1.LoadTGA("arbol1.tga");
 	textArbol1.BuildGLTexture();
 	textArbol1.ReleaseImage();
-	
+
 	textArbol2.LoadTGA("arbol2512x512.tga");
 	textArbol2.BuildGLTexture();
 	textArbol2.ReleaseImage();
@@ -221,7 +221,7 @@ void inicializar(void)     // Inicializamos parametros
 	textCaminoCarritos.LoadTGA("caminoCarritos512x512.tga");
 	textCaminoCarritos.BuildGLTexture();
 	textCaminoCarritos.ReleaseImage();
-	
+
 	textBasePasto.LoadTGA("basePasto1.tga");
 	textBasePasto.BuildGLTexture();
 	textBasePasto.ReleaseImage();
@@ -230,10 +230,10 @@ void inicializar(void)     // Inicializamos parametros
 	textBalon.BuildGLTexture();
 	textBalon.ReleaseImage();
 
-	text1.LoadBMP("futbol/tribuna.bmp");
+	text1.LoadBMP("futbol/tribuna_v2.bmp");
 	text1.BuildGLTexture();
 	text1.ReleaseImage();
-	
+
 
 	objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
 
@@ -244,7 +244,7 @@ void inicializar(void)     // Inicializamos parametros
 		printf("\n No pude crear el motor de audio :(");
 		exit(0); //termina ejecución justo aquí
 	}
-	
+
 	//reproduce con el 20% del sonido
 	audioFondo->setDefaultVolume(0.2f);
 
@@ -280,7 +280,7 @@ void inicializar(void)     // Inicializamos parametros
 		KeyFrame[i].incXBal = 0;
 		KeyFrame[i].incYBal = 0;
 		KeyFrame[i].incZBal = 0;
-		
+
 	}
 
 
@@ -362,31 +362,31 @@ void monito(void)
 {
 	//glNewList(1, GL_COMPILE);
 	glPushMatrix();//Pecho
-		glScalef(0.5, 0.5, 0.5);
-		glColor3f(1.0, 1.0, 1.0);
-		jugador.prisma(2.0, 2.0, 1, 0);
-		glColor3f(1.0, 1.0, 1.0);
+	glScalef(0.5, 0.5, 0.5);
+	glColor3f(1.0, 1.0, 1.0);
+	jugador.prisma(2.0, 2.0, 1, 0);
+	glColor3f(1.0, 1.0, 1.0);
 
 	glPushMatrix();//Cuello
-		glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
-		glTranslatef(0, 1.0, 0.0);
-		jugador.cilindro(0.25, 0.25, 15, 0);
-		glPushMatrix();//Cabeza
-		glTranslatef(0, 1.0, 0);
-		glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
-		jugador.esfera(0.75, 15, 15, 0);
+	glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
+	glTranslatef(0, 1.0, 0.0);
+	jugador.cilindro(0.25, 0.25, 15, 0);
+	glPushMatrix();//Cabeza
+	glTranslatef(0, 1.0, 0);
+	glColor3f(1, 0.886, 0.643);//Aquí se cambia el color
+	jugador.esfera(0.75, 15, 15, 0);
 	glPopMatrix();
 	glPopMatrix();
 
 	glPushMatrix(); //Brazo derecho-->
-		glTranslatef(1.25, 0.65, 0);
-		jugador.esfera(0.5, 12, 12, 0);//Manga de la playera
-		glPushMatrix();
-		glTranslatef(0.25, 0, 0);
-		glRotatef(-45, 0, 1, 0);
-		glTranslatef(0.75, 0, 0);
-		glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
-		jugador.prisma(0.7, 1.5, 0.7, 0);
+	glTranslatef(1.25, 0.65, 0);
+	jugador.esfera(0.5, 12, 12, 0);//Manga de la playera
+	glPushMatrix();
+	glTranslatef(0.25, 0, 0);
+	glRotatef(-45, 0, 1, 0);
+	glTranslatef(0.75, 0, 0);
+	glColor3f(1, 0.886, 0.643);//AQUÍ SE CAMBIA EL COLOR
+	jugador.prisma(0.7, 1.5, 0.7, 0);
 	glPopMatrix();
 	glPopMatrix();
 
@@ -675,234 +675,234 @@ void defensa(void)
 	//glEndList();
 }
 
-void ciudad (void)
+void ciudad(void)
 {
-		glPushMatrix(); //base de pasto que cubre largo y profundidad del skybox
-			glScalef(130,0.025,130);
-			glDisable(GL_LIGHTING);
-			figBasePasto.prisma2(textBasePasto.GLindex, 0);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-
-	
-		glPushMatrix(); //Campo
-			//glTranslatef(23.5,0.0,0.0);
-			//el campo mide 100 x 64 pero usaré la mitad de tamaño
-			//agrego 4 más por el pasto fuera del campo
-			glScalef(54,0.1,36);
-			glDisable(GL_LIGHTING);
-			figCampo.prisma2(textCampo.GLindex, 0);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-
-		/*glPushMatrix(); //Grada frontal
-			glTranslatef(0.0,3.0,-21.0);
-			glRotatef(90,1,0,0);
-			//glRotatef(180,0,0,1);
-			glScalef(54,5.0,6);
-			glDisable(GL_LIGHTING);
-			figGradaFrontal.prisma2(textGrada.GLindex, textTierra.GLindex);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();*/
+	glPushMatrix(); //base de pasto que cubre largo y profundidad del skybox
+	glScalef(130, 0.025, 130);
+	glDisable(GL_LIGHTING);
+	figBasePasto.prisma2(textBasePasto.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
 
-		//PORTERIA ORIGINAL
-		glPushMatrix(); //poste1
-			glTranslatef(25.0, 0.0, -3.6);
-			figPostes.cilindro(0.1, 2.0, 30.0, 0);
-		glPopMatrix();
-		
-		glPushMatrix(); //poste2
-			glTranslatef(25.0, 0.0, 3.6);
-			figPostes.cilindro(0.1, 2.0, 30.0, 0);
-		glPopMatrix();
-		
-		glPushMatrix(); //travesaño
-			glTranslatef(25.0, 2.05, -3.65);
-			glRotatef(90.0, 1.0, 0.0, 0.0);
-			figPostes.cilindro(0.1, 7.32, 30.0, 0);
-		glPopMatrix();
+	glPushMatrix(); //Campo
+					//glTranslatef(23.5,0.0,0.0);
+					//el campo mide 100 x 64 pero usaré la mitad de tamaño
+					//agrego 4 más por el pasto fuera del campo
+	glScalef(54, 0.1, 36);
+	glDisable(GL_LIGHTING);
+	figCampo.prisma2(textCampo.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-		//PORTERIA CONTRARIA
-		glPushMatrix(); //poste1
-			glTranslatef(-25.0, 0.0, -3.6);
-			figPostes.cilindro(0.1, 2.0, 30.0, 0);
-		glPopMatrix();
-
-		glPushMatrix(); //poste2
-			glTranslatef(-25.0, 0.0, 3.6);
-			figPostes.cilindro(0.1, 2.0, 30.0, 0);
-		glPopMatrix();
-
-		glPushMatrix(); //travesaño
-			glTranslatef(-25.0, 2.05, -3.65);
-			glRotatef(90.0, 1.0, 0.0, 0.0);
-			figPostes.cilindro(0.1, 7.32, 30.0, 0);
-		glPopMatrix();
-		
-		
-		glPushMatrix(); //Tierra inferior para espacio para arbolitos
-			glTranslatef(0.0,0.0,21.0);
-			//glRotatef(90,1,0,0);
-			//glRotatef(180,0,0,1);
-			glScalef(54,0.1,6);
-			glDisable(GL_LIGHTING);
-			figGradaFrontal.prisma2CaminosH(textTierra.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();	
-		
-		glPushMatrix(); //Tierra lateral derecha para espacio para arbolitos
-			glTranslatef(30.0,0.0,0.0);
-			glRotatef(90,0,1,0);
-			//glRotatef(180,0,0,1);
-			glScalef(48,0.1,6);
-			glDisable(GL_LIGHTING);
-			figGradaFrontal.prisma2CaminosH(textTierra.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-		
-		
-		//bloque para camino peatonal
-		glPushMatrix(); //camino peatonal inferior
-			glTranslatef(0.0,0.0,26.0);
-			glScalef(66,0.1,4);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();	
-		
-		glPushMatrix(); //camino peatonal lateral derecho
-			glTranslatef(35.0,0.0,0.0);
-			glRotatef(90,0,1,0);
-			glScalef(56,0.1,4);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();	
-
-		glPushMatrix(); //camino peatonal lateral derecho (bosque)
-			glTranslatef(45.0, 0.0, 0.0);
-			glRotatef(90, 0, 1, 0);
-			glScalef(56, 0.1, 4);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
+	glPushMatrix(); //Grada frontal
+	glTranslatef(0.0,3.0,-21.0);
+	glRotatef(90,1,0,0);
+	//glRotatef(180,0,0,1);
+	glScalef(54,5.0,6);
+	glDisable(GL_LIGHTING);
+	figGradaFrontal.prisma2(text1.GLindex, textGrada.GLindex);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
 
-		//camino peatonal lateral izquierdo
-		glPushMatrix();
-			glTranslatef(-35.0, 0.0, 0.0);
-			glRotatef(90, 0, 1, 0);
-			glScalef(56, 0.1, 4.0);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
+	//PORTERIA ORIGINAL
+	glPushMatrix(); //poste1
+	glTranslatef(25.0, 0.0, -3.6);
+	figPostes.cilindro(0.1, 2.0, 30.0, 0);
+	glPopMatrix();
 
-		//camino peatonal superior
-		glPushMatrix();
-			glTranslatef(0.0, 0.0, -26.0);
-			glScalef(66, 0.1, 4);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-		
-		//bloque para camino de carritos
-		glPushMatrix(); //camino carritos inferior
-			glTranslatef(0.0,0.0,31.0);
-			glScalef(74,0.05,6);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();	
+	glPushMatrix(); //poste2
+	glTranslatef(25.0, 0.0, 3.6);
+	figPostes.cilindro(0.1, 2.0, 30.0, 0);
+	glPopMatrix();
 
-		//camino de carritos superior
-		glPushMatrix(); 
-			glTranslatef(0.0, 0.0, -31.0);
-			glScalef(74, 0.05, 6);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
-		
-		glPushMatrix(); //camino carritos lateral derecho
-			glTranslatef(40.0,0.0,0.0);
-			glRotatef(90,0,1,0);
-			glScalef(68,0.05,6);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
+	glPushMatrix(); //travesaño
+	glTranslatef(25.0, 2.05, -3.65);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	figPostes.cilindro(0.1, 7.32, 30.0, 0);
+	glPopMatrix();
 
-		//camino de carritos lateral izquierdo
-		glPushMatrix(); 
-			glTranslatef(-40.0, 0.0, 0.0);
-			glRotatef(90, 0, 1, 0);
-			glScalef(68, 0.05, 6);
-			glDisable(GL_LIGHTING);
-			figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
-			glEnable(GL_LIGHTING);
-		glPopMatrix();
+	//PORTERIA CONTRARIA
+	glPushMatrix(); //poste1
+	glTranslatef(-25.0, 0.0, -3.6);
+	figPostes.cilindro(0.1, 2.0, 30.0, 0);
+	glPopMatrix();
+
+	glPushMatrix(); //poste2
+	glTranslatef(-25.0, 0.0, 3.6);
+	figPostes.cilindro(0.1, 2.0, 30.0, 0);
+	glPopMatrix();
+
+	glPushMatrix(); //travesaño
+	glTranslatef(-25.0, 2.05, -3.65);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	figPostes.cilindro(0.1, 7.32, 30.0, 0);
+	glPopMatrix();
+
+
+	glPushMatrix(); //Tierra inferior para espacio para arbolitos
+	glTranslatef(0.0, 0.0, 21.0);
+	//glRotatef(90,1,0,0);
+	//glRotatef(180,0,0,1);
+	glScalef(54, 0.1, 6);
+	glDisable(GL_LIGHTING);
+	figGradaFrontal.prisma2CaminosH(textTierra.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	glPushMatrix(); //Tierra lateral derecha para espacio para arbolitos
+	glTranslatef(30.0, 0.0, 0.0);
+	glRotatef(90, 0, 1, 0);
+	//glRotatef(180,0,0,1);
+	glScalef(48, 0.1, 6);
+	glDisable(GL_LIGHTING);
+	figGradaFrontal.prisma2CaminosH(textTierra.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+
+	//bloque para camino peatonal
+	glPushMatrix(); //camino peatonal inferior
+	glTranslatef(0.0, 0.0, 26.0);
+	glScalef(66, 0.1, 4);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	glPushMatrix(); //camino peatonal lateral derecho
+	glTranslatef(35.0, 0.0, 0.0);
+	glRotatef(90, 0, 1, 0);
+	glScalef(56, 0.1, 4);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	glPushMatrix(); //camino peatonal lateral derecho (bosque)
+	glTranslatef(45.0, 0.0, 0.0);
+	glRotatef(90, 0, 1, 0);
+	glScalef(56, 0.1, 4);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+
+	//camino peatonal lateral izquierdo
+	glPushMatrix();
+	glTranslatef(-35.0, 0.0, 0.0);
+	glRotatef(90, 0, 1, 0);
+	glScalef(56, 0.1, 4.0);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	//camino peatonal superior
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, -26.0);
+	glScalef(66, 0.1, 4);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoPeatonal.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	//bloque para camino de carritos
+	glPushMatrix(); //camino carritos inferior
+	glTranslatef(0.0, 0.0, 31.0);
+	glScalef(74, 0.05, 6);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	//camino de carritos superior
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, -31.0);
+	glScalef(74, 0.05, 6);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	glPushMatrix(); //camino carritos lateral derecho
+	glTranslatef(40.0, 0.0, 0.0);
+	glRotatef(90, 0, 1, 0);
+	glScalef(68, 0.05, 6);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+	//camino de carritos lateral izquierdo
+	glPushMatrix();
+	glTranslatef(-40.0, 0.0, 0.0);
+	glRotatef(90, 0, 1, 0);
+	glScalef(68, 0.05, 6);
+	glDisable(GL_LIGHTING);
+	figCaminoPeatonal.prisma2CaminosH(textCaminoCarritos.GLindex, 6);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 }
 
 
 void arbol_fondoTransparente(CTexture textura)
 {
 	glPushMatrix();
-		glDisable(GL_LIGHTING);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.1);
-		//glBindTexture(GL_TEXTURE_2D, textArbol1.GLindex);
-		glBindTexture(GL_TEXTURE_2D, textura.GLindex);
-		
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glDisable(GL_LIGHTING);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.1);
+	//glBindTexture(GL_TEXTURE_2D, textArbol1.GLindex);
+	glBindTexture(GL_TEXTURE_2D, textura.GLindex);
+
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
-		glRotatef(45, 0, 1, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glRotatef(45, 0, 1, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
-		glRotatef(-45, 0, 1, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glRotatef(-45, 0, 1, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
-		glRotatef(90, 0, 1, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
-		glDisable(GL_ALPHA_TEST);
-		glEnable(GL_LIGHTING);
+	glRotatef(90, 0, 1, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
+	glDisable(GL_ALPHA_TEST);
+	glEnable(GL_LIGHTING);
 
 	glPopMatrix();
 }
@@ -911,91 +911,91 @@ void arbol_fondoTransparente(CTexture textura)
 void nube(CTexture textura)
 {
 	glPushMatrix();
-		glDisable(GL_LIGHTING);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.1);
-		glBindTexture(GL_TEXTURE_2D, textura.GLindex);
-		
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
-	glPopMatrix();
-	
-	glPushMatrix();
-		glRotatef(11.25, 1, 0, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
-	glPopMatrix();
-	
-	glPushMatrix();
-		glRotatef(22.5, 1, 0, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
-	glPopMatrix();
-	
-	glPushMatrix();
-		glRotatef(33.75, 1, 0, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glDisable(GL_LIGHTING);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.1);
+	glBindTexture(GL_TEXTURE_2D, textura.GLindex);
+
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
-		glRotatef(-11.25, 1, 0, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glRotatef(11.25, 1, 0, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
-		glRotatef(-22.5, 1, 0, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glRotatef(22.5, 1, 0, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
-		glRotatef(-33.75, 1, 0, 0);
-		glBegin(GL_QUADS); //plano
-			glColor3f(1.0, 1.0, 1.0);
-			glNormal3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
-		glEnd();
+	glRotatef(33.75, 1, 0, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(-11.25, 1, 0, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(-22.5, 1, 0, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(-33.75, 1, 0, 0);
+	glBegin(GL_QUADS); //plano
+	glColor3f(1.0, 1.0, 1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0, 0.0, 0.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0, 20.0, 0.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0, 20.0, 0.0);
+	glEnd();
 	glPopMatrix();
 }
 
@@ -1004,7 +1004,7 @@ void pintaTexto(float x, float y, float z, void *font, char *string)
 {
 	char *c;     //Almacena los caracteres a escribir
 	glRasterPos3f(x, y, z);	//Posicion apartir del centro de la ventana
-	//glWindowPos2i(150,100);
+							//glWindowPos2i(150,100);
 	for (c = string; *c != '\0'; c++) //Condicion de fin de cadena
 	{
 		glutBitmapCharacter(font, *c); //imprime
@@ -1020,155 +1020,155 @@ void dibujar(void)   // Creamos la funcion donde se dibuja
 	glPushMatrix();
 
 
-		glRotatef(g_lookupdown, 1.0f, 0, 0);
-	
-		gluLookAt(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
-			objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
-			objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
-	
-	
+	glRotatef(g_lookupdown, 1.0f, 0, 0);
+
+	gluLookAt(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
+		objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
+		objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
+
+
+	glPushMatrix();
+
+	glPushMatrix(); //Creamos cielo
+	glDisable(GL_LIGHTING);
+
+	//skybox modificado para recibir una imagen por cada cara
+	figSkybox.skyboxH(130.0, 130.0, 130.0, textSkyboxFrontal.GLindex, textSkyboxAtras.GLindex, textSkyboxIzquierda.GLindex, textSkyboxDerecha.GLindex, textSkyboxArriba.GLindex);
+
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+
+
+	glPushMatrix(); //creamos la ciudad
+	glEnable(GL_COLOR_MATERIAL);
+	ciudad();
+	glDisable(GL_COLOR_MATERIAL);
+	glPopMatrix();
+
+
+	glPushMatrix(); //creamos varios árbolitos con fondo transparente
+	glTranslatef(0.0, 0.0, 21.0);
+	arbol_fondoTransparente(textArbol1);
+
+	glPushMatrix();
+	glTranslatef(10.0, 0.0, 0.0);
+	glScalef(0.5, 0.5, 0.5);
+	arbol_fondoTransparente(textArbol2);
+	glPopMatrix();
+	glPopMatrix();
+
+	//creando un arbolito propio
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, 40.0);
+	arbol_fondoTransparente(textArbol1);
+	glScalef(0.5, 0.5, 0.5);
+	glPopMatrix();
+
+	//crenado arbolito propio 
+	glPushMatrix();
+	glTranslatef(-25.0, 0.0, 40.0);
+	arbol_fondoTransparente(textArbol2);
+	glScalef(0.2, 0.2, 0.2);
+	glPopMatrix();
+
+	glPushMatrix(); //creamos árbolitos con ciclo
+	glTranslatef(30.0, 0.0, -24.0);
+
+	for (int coloca = 0; coloca <= 48; coloca += 3)
+	{
 		glPushMatrix();
-		
-			glPushMatrix(); //Creamos cielo
-				glDisable(GL_LIGHTING);
-						
-				//skybox modificado para recibir una imagen por cada cara
-				figSkybox.skyboxH(130.0, 130.0, 130.0,textSkyboxFrontal.GLindex, textSkyboxAtras.GLindex, textSkyboxIzquierda.GLindex, textSkyboxDerecha.GLindex, textSkyboxArriba.GLindex);
-					
-				glEnable(GL_LIGHTING);
-			glPopMatrix();
-	
-	
-			glPushMatrix(); //creamos la ciudad
-				glEnable ( GL_COLOR_MATERIAL );
-					ciudad();
-				glDisable ( GL_COLOR_MATERIAL );
-			glPopMatrix();	
-			
-			
-			glPushMatrix(); //creamos varios árbolitos con fondo transparente
-				glTranslatef(0.0, 0.0, 21.0);
-				arbol_fondoTransparente(textArbol1);
-				
-				glPushMatrix();
-					glTranslatef(10.0, 0.0, 0.0);
-					glScalef(0.5, 0.5, 0.5);
-					arbol_fondoTransparente(textArbol2);
-				glPopMatrix();
-			glPopMatrix();
-
-			//creando un arbolito propio
-			glPushMatrix();
-				glTranslatef(0.0, 0.0, 40.0);
-				arbol_fondoTransparente(textArbol1);
-				glScalef(0.5, 0.5, 0.5);
-			glPopMatrix();
-
-			//crenado arbolito propio 
-			glPushMatrix();
-				glTranslatef(-25.0, 0.0, 40.0);
-				arbol_fondoTransparente(textArbol2);
-				glScalef(0.2, 0.2, 0.2);
-			glPopMatrix();
-	
-			glPushMatrix(); //creamos árbolitos con ciclo
-				glTranslatef(30.0, 0.0, -24.0);
-	
-				for(int coloca=0; coloca<=48; coloca+=3)
-				{
-				glPushMatrix();
-					glTranslatef(0.0, 0.0, (float)coloca);
-					glScalef(0.2, 0.2, 0.2);
-					arbol_fondoTransparente(textArbol2);
-				glPopMatrix();
-				}
-			glPopMatrix();
-
-			glPushMatrix(); //creamos árbolitos con ciclo #2
-				glTranslatef(50.0, 0.0, -24.0);
-
-				for (int coloca = 0; coloca <= 48; coloca += 3)
-				{
-					glPushMatrix();
-					glTranslatef(0.0, 0.0, (float)coloca);
-					glScalef(0.2, 0.2, 0.2);
-					arbol_fondoTransparente(textArbol2);
-					glPopMatrix();
-				}
-			glPopMatrix();
-
-			//creamos árbolitos con ciclo #3
-			glPushMatrix(); 
-			glTranslatef(-30.0, 0.0, -24.0);
-
-			for (int coloca = 0; coloca <= 48; coloca += 3)
-			{
-				glPushMatrix();
-				glTranslatef(0.0, 0.0, (float)coloca);
-				glScalef(0.2, 0.2, 0.2);
-				arbol_fondoTransparente(textArbol2);
-				glPopMatrix();
-			}
-			glPopMatrix();
-			
-	
-			glPushMatrix();
-				glTranslatef(0.0, 50.0, 0.0);
-				nube(textNube1);
-			glPopMatrix();
-
-
-			//Se dibuja al monito
-			glPushMatrix();
-				glEnable(GL_COLOR_MATERIAL);
-				glColor3f(1, 1, 1);
-				//glScalef(0.5, 0.5, 0.5);
-				//monito();
-				glCallList(ciudad_display_list);
-				glTranslatef(posX, posY, posZ);
-				glRotatef(giroMonito, 0, 1, 0);
-				monito();
-				//balon();
-				glDisable(GL_COLOR_MATERIAL);
-			glPopMatrix();
-
-			//Aquí se dibuja al portero
-			glPushMatrix();
-				glEnable(GL_COLOR_MATERIAL);
-				glColor3f(1, 1, 1);
-				//glScalef(0.5, 0.5, 0.5);
-				//monito();
-				glCallList(ciudad_display_list);
-				glTranslatef(posXp, posYp, movZportero);
-				//glRotatef(giraportero, 0, 1, 0);
-				portero();
-				//balon();
-				glDisable(GL_COLOR_MATERIAL);
-			glPopMatrix();
-	
-
-			//Aquí se dibuja al defensa
-			glPushMatrix();
-				glEnable(GL_COLOR_MATERIAL);
-				glColor3f(1, 1, 1);
-				//glScalef(0.5, 0.5, 0.5);
-				//monito();
-				glCallList(ciudad_display_list);
-				glTranslatef(posXd, movYdefensa, posZd);
-				glRotatef(-90, 0, 1, 0);
-				defensa();
-				//balon();
-				glDisable(GL_COLOR_MATERIAL);
-			glPopMatrix();
-
-			//aqui dibuja balon
-			glPushMatrix();
-				glTranslatef(posXBal, posYBal, posZBal);
-				glColor3f(1.0, 1.0, 1.0);
-				balon.esfera(0.5, 15, 15, textBalon.GLindex);
-			glPopMatrix();
-	
+		glTranslatef(0.0, 0.0, (float)coloca);
+		glScalef(0.2, 0.2, 0.2);
+		arbol_fondoTransparente(textArbol2);
 		glPopMatrix();
+	}
+	glPopMatrix();
+
+	glPushMatrix(); //creamos árbolitos con ciclo #2
+	glTranslatef(50.0, 0.0, -24.0);
+
+	for (int coloca = 0; coloca <= 48; coloca += 3)
+	{
+		glPushMatrix();
+		glTranslatef(0.0, 0.0, (float)coloca);
+		glScalef(0.2, 0.2, 0.2);
+		arbol_fondoTransparente(textArbol2);
+		glPopMatrix();
+	}
+	glPopMatrix();
+
+	//creamos árbolitos con ciclo #3
+	glPushMatrix();
+	glTranslatef(-30.0, 0.0, -24.0);
+
+	for (int coloca = 0; coloca <= 48; coloca += 3)
+	{
+		glPushMatrix();
+		glTranslatef(0.0, 0.0, (float)coloca);
+		glScalef(0.2, 0.2, 0.2);
+		arbol_fondoTransparente(textArbol2);
+		glPopMatrix();
+	}
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslatef(0.0, 50.0, 0.0);
+	nube(textNube1);
+	glPopMatrix();
+
+
+	//Se dibuja al monito
+	glPushMatrix();
+	glEnable(GL_COLOR_MATERIAL);
+	glColor3f(1, 1, 1);
+	//glScalef(0.5, 0.5, 0.5);
+	//monito();
+	glCallList(ciudad_display_list);
+	glTranslatef(posX, posY, posZ);
+	glRotatef(giroMonito, 0, 1, 0);
+	monito();
+	//balon();
+	glDisable(GL_COLOR_MATERIAL);
+	glPopMatrix();
+
+	//Aquí se dibuja al portero
+	glPushMatrix();
+	glEnable(GL_COLOR_MATERIAL);
+	glColor3f(1, 1, 1);
+	//glScalef(0.5, 0.5, 0.5);
+	//monito();
+	glCallList(ciudad_display_list);
+	glTranslatef(posXp, posYp, movZportero);
+	//glRotatef(giraportero, 0, 1, 0);
+	portero();
+	//balon();
+	glDisable(GL_COLOR_MATERIAL);
+	glPopMatrix();
+
+
+	//Aquí se dibuja al defensa
+	glPushMatrix();
+	glEnable(GL_COLOR_MATERIAL);
+	glColor3f(1, 1, 1);
+	//glScalef(0.5, 0.5, 0.5);
+	//monito();
+	glCallList(ciudad_display_list);
+	glTranslatef(posXd, movYdefensa, posZd);
+	glRotatef(-90, 0, 1, 0);
+	defensa();
+	//balon();
+	glDisable(GL_COLOR_MATERIAL);
+	glPopMatrix();
+
+	//aqui dibuja balon
+	glPushMatrix();
+	glTranslatef(posXBal, posYBal, posZBal);
+	glColor3f(1.0, 1.0, 1.0);
+	balon.esfera(0.5, 15, 15, textBalon.GLindex);
+	glPopMatrix();
+
+	glPopMatrix();
 	glPopMatrix();
 
 
@@ -1189,46 +1189,46 @@ void dibujar(void)   // Creamos la funcion donde se dibuja
 void animacion(void)
 {
 	//MOVIMIENTO DEL PORTERO
-		if (porteroPos)
-		{
-			movZportero += 0.05f;
-		}
-		else if (!porteroPos)
-		{
-			movZportero -= 0.05f;
-		}
-		if (movZportero >= 3.0f)
-		{
-			porteroPos = false;
-		}
-		else if (movZportero <= -3.0f)
-		{
-			porteroPos = true;
-		}
-		
+	if (porteroPos)
+	{
+		movZportero += 0.05f;
+	}
+	else if (!porteroPos)
+	{
+		movZportero -= 0.05f;
+	}
+	if (movZportero >= 3.0f)
+	{
+		porteroPos = false;
+	}
+	else if (movZportero <= -3.0f)
+	{
+		porteroPos = true;
+	}
+
 
 	//MOVIMIENTO DEL DEFENSA
-		if (animadefensa == true)
+	if (animadefensa == true)
+	{
+		if (defensaPos)
 		{
-			if (defensaPos)
-			{
-				movYdefensa += 0.01f;
-			}
-			else if (!defensaPos)
-			{
-				movYdefensa -= 0.01f;
-			}
-			if (movYdefensa >= 3.5f)
-			{
-				defensaPos = false;
-			}
-			else if (movYdefensa <= 2.5f)
-			{
-				defensaPos = true;
-			}
+			movYdefensa += 0.01f;
 		}
+		else if (!defensaPos)
+		{
+			movYdefensa -= 0.01f;
+		}
+		if (movYdefensa >= 3.5f)
+		{
+			defensaPos = false;
+		}
+		else if (movYdefensa <= 2.5f)
+		{
+			defensaPos = true;
+		}
+	}
 
-	
+
 
 	//Movimiento del monito
 	if (play)
